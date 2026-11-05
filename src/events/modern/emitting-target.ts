@@ -42,8 +42,20 @@ const TEXT_EDITING_EVENT_TYPES = new Set([
   'submitEditing',
 ]);
 
+/** Why `getEmittingTarget()` dropped an event. */
+export type DroppedEventReason =
+  | { kind: 'displayNone'; displayNoneBlocker: TestInstance }
+  | { kind: 'pointerEvents' }
+  | { kind: 'nonEditable'; textInput: TestInstance }
+  | { kind: 'disabledSwitch' };
+
+/** The element that emits the event, or why no element would emit it. */
+export type EmittingTargetResult =
+  | { target: TestInstance; droppedReason?: never }
+  | { target: null; droppedReason: DroppedEventReason };
+
 /**
- * The element a device would emit the event from, or `null` when no element would emit it:
+ * The element a device would emit the event from, or the reason no element would emit it:
  *
  * - Touch and pointer events: the hit target, as for `press` (`getTouchPath()`). `pointerEvents`
  *   moves them to the nearest ancestor it doesn't block, and drops them when it blocks every
@@ -63,62 +75,39 @@ export function getEmittingTarget(
   target: TestInstance,
   eventType: string,
   init: CreateEventInit,
-): TestInstance | null {
+): EmittingTargetResult {
   if (init.dispatch != null) {
-    return target;
+    return { target };
   }
 
   if (HIT_TESTED_EVENT_TYPES.has(eventType)) {
-    return getTouchPath(target)[0] ?? null;
+    const hitTarget = getTouchPath(target)[0];
+    if (hitTarget != null) {
+      return { target: hitTarget };
+    }
+
+    const displayNoneBlocker = getDisplayNoneBlocker(target);
+    return {
+      target: null,
+      droppedReason:
+        displayNoneBlocker != null
+          ? { kind: 'displayNone', displayNoneBlocker }
+          : { kind: 'pointerEvents' },
+    };
   }
 
   if (TEXT_EDITING_EVENT_TYPES.has(eventType)) {
     const textInput = findClosestInstance(target, isHostTextInput);
     if (textInput != null) {
-      return isEditableTextInput(textInput) ? textInput : null;
+      return isEditableTextInput(textInput)
+        ? { target: textInput }
+        : { target: null, droppedReason: { kind: 'nonEditable', textInput } };
     }
   }
 
   if (eventType === 'change' && isHostSwitch(target) && target.props.disabled === true) {
-    return null;
+    return { target: null, droppedReason: { kind: 'disabledSwitch' } };
   }
 
-  return target;
-}
-
-/** Why `getEmittingTarget()` dropped an event. */
-export type DroppedEventReason =
-  | { kind: 'displayNone'; displayNoneBlocker: TestInstance }
-  | { kind: 'pointerEvents' }
-  | { kind: 'nonEditable'; textInput: TestInstance }
-  | { kind: 'disabledSwitch' };
-
-/**
- * Why `getEmittingTarget()` returns `null` for the event, for diagnostics, or `null` when it
- * doesn't drop it. Reads props only.
- */
-export function getDroppedEventReason(
-  target: TestInstance,
-  eventType: string,
-  init: CreateEventInit,
-): DroppedEventReason | null {
-  if (getEmittingTarget(target, eventType, init) != null) {
-    return null;
-  }
-
-  if (HIT_TESTED_EVENT_TYPES.has(eventType)) {
-    const displayNoneBlocker = getDisplayNoneBlocker(target);
-    return displayNoneBlocker != null
-      ? { kind: 'displayNone', displayNoneBlocker }
-      : { kind: 'pointerEvents' };
-  }
-
-  const textInput = TEXT_EDITING_EVENT_TYPES.has(eventType)
-    ? findClosestInstance(target, isHostTextInput)
-    : null;
-  if (textInput != null) {
-    return { kind: 'nonEditable', textInput };
-  }
-
-  return { kind: 'disabledSwitch' };
+  return { target };
 }

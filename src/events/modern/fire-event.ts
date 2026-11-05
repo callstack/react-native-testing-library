@@ -181,9 +181,9 @@ async function fireEventInternal(
   }
 
   // Before native state, so a dropped `change` leaves it alone.
-  const target = getEmittingTarget(instance, eventType, init);
+  const { target, droppedReason } = getEmittingTarget(instance, eventType, init);
   if (target == null) {
-    warnAboutDroppedEvent(instance, eventType, init, reportedEventType);
+    warnAboutDroppedEvent(instance, eventType, droppedReason, reportedEventType);
     return;
   }
 

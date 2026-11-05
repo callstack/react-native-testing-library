@@ -9,8 +9,7 @@ import {
   getPointerEventsBlockedTargets,
   logEventWarning,
 } from '../shared/warnings';
-import { getDroppedEventReason } from './emitting-target';
-import type { CreateEventInit } from './event';
+import type { DroppedEventReason } from './emitting-target';
 import type { EventTypeConfig, PressabilityEventType } from './event-types';
 import type { PressResponderResult } from './pressability';
 import { getDisplayNoneBlocker, isPressabilityResponder } from './pressability';
@@ -24,14 +23,14 @@ import { getDisplayNoneBlocker, isPressabilityResponder } from './pressability';
 export function warnAboutDroppedEvent(
   instance: TestInstance,
   eventType: string,
-  init: CreateEventInit,
+  reason: DroppedEventReason,
   reportedEventType: string = eventType,
 ) {
   if (!getConfig().eventDiagnostics) {
     return;
   }
 
-  const warning = getDroppedEventWarning(instance, eventType, init, reportedEventType);
+  const warning = getDroppedEventWarning(instance, reason, reportedEventType);
   if (warning != null) {
     logEventWarning(warning);
   }
@@ -89,12 +88,10 @@ export function warnAboutUnhandledPressabilityEvent(
 
 function getDroppedEventWarning(
   instance: TestInstance,
-  eventType: string,
-  init: CreateEventInit,
+  reason: DroppedEventReason,
   reportedEventType: string,
 ): EventWarning | null {
-  const reason = getDroppedEventReason(instance, eventType, init);
-  switch (reason?.kind) {
+  switch (reason.kind) {
     case 'displayNone':
       return getDisplayNoneWarning(instance, reportedEventType, reason.displayNoneBlocker);
     case 'pointerEvents':
@@ -103,8 +100,6 @@ function getDroppedEventWarning(
       return getDisabledWarning([reason.textInput], reportedEventType);
     case 'disabledSwitch':
       return getDisabledWarning([instance], reportedEventType);
-    default:
-      return null;
   }
 }
 
