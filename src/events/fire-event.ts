@@ -2,13 +2,12 @@ import type { TestInstance } from 'test-renderer';
 
 import type { EventSystem } from '../config';
 import { getConfig } from '../config';
+import { normalizeModernFireEventArgs } from './fire-event-args';
 import { fireEvent as legacyFireEvent } from './legacy/fire-event';
 import type { CustomEventDispatch, KnownEventType } from './modern/event-types';
 import type { FireEventInit } from './modern/fire-event';
 import { fireEvent as modernFireEvent } from './modern/fire-event';
-import { normalizeEventType } from './shared/handler';
 import type { EventProps, EventType, LayoutRectangle } from './shared/types';
-import { ensureAtMostOneEventArg, warnOnPrefix } from './utils';
 
 /**
  * Settings that users augment to change RNTL's types. `@testing-library/react-native/modern-types`
@@ -74,11 +73,8 @@ async function fireEventImpl(
   ...data: unknown[]
 ): Promise<unknown> {
   if (isModern()) {
-    const normalizedType = normalizeEventType(eventType);
-    ensureAtMostOneEventArg(normalizedType, data, fireEventImpl);
-    // Before the dispatch, so the warning comes before handler output, even if a handler throws.
-    warnOnPrefix(eventType);
-    return await modernFireEvent(instance, normalizedType, data[0] as FireEventInit | undefined);
+    const args = normalizeModernFireEventArgs(instance, eventType, data, fireEventImpl);
+    return await modernFireEvent(instance, args.eventType, args.event as FireEventInit | undefined);
   }
 
   return await legacyFireEvent(instance, eventType, ...data);
