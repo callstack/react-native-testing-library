@@ -3,7 +3,7 @@
 `@testing-library/react-native` is a TypeScript/Jest library for testing React Native components with user-focused testing patterns.
 
 > [!IMPORTANT]
-> Never run git commands that create commits, push, or modify the index/history. The human stages and commits. See [Agent rules](#agent-rules).
+> Don't commit, push, or change the index or history on your own initiative. Do it only when the human asks, directly or through a skill or command they invoked. See [Agent rules](#agent-rules).
 
 - Package manager: `yarn` (`yarn@4.11.0`)
 - Common commands:
@@ -49,10 +49,11 @@ Notes:
 
 ### Git restrictions
 
-- Never run git commands that create commits, push, or modify the index/history. The human owns these actions.
-- Forbidden commands include (non-exhaustive): `git commit`, `git push`, `git add`, `git rm`, `git mv`, `git restore --staged`, `git reset`, `git rebase`, `git merge`, `git cherry-pick`, `git stash`, `git commit --amend`, and `git tag`.
-- Read-only inspection is fine: `git status`, `git log`, `git diff`, `git show`, `git blame`.
-- When conflicts or staging are involved, resolve file contents in the working tree only, then hand off to the human to stage and commit. Describe the exact commands you would run instead of running them.
+- Without an instruction, don't run git commands that create commits, push, or modify the index/history. These include (non-exhaustive): `git commit`, `git push`, `git add`, `git rm`, `git mv`, `git restore --staged`, `git reset`, `git rebase`, `git merge`, `git cherry-pick`, `git stash`, `git commit --amend`, and `git tag`.
+- When the human asks for commits, either directly or through a skill or command they invoked (for example one that commits after each fix), create them on the current branch. Stage only the files that belong to that change, and never stage `PR.txt` or an unrelated `refs/` pointer.
+- Pushing, rewriting history (`rebase`, `reset`, `--amend`), and discarding work (`stash`, `reset --hard`) each need an explicit request for that specific action. A request to commit doesn't cover them.
+- Read-only inspection is always fine: `git status`, `git log`, `git diff`, `git show`, `git blame`.
+- Without an instruction to commit, leave changes in the working tree and hand off to the human. Describe the exact commands you would run instead of running them.
 
 ### PR draft
 

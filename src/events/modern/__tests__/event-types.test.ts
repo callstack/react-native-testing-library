@@ -93,7 +93,7 @@ function toEventType(topLevelType: string) {
 }
 
 function getDispatchConfig(eventType: string) {
-  return createEvent(eventType)?.dispatchConfig;
+  return createEvent(eventType).dispatchConfig;
 }
 
 // The lists are the union across supported React Native versions, so older versions declare only a

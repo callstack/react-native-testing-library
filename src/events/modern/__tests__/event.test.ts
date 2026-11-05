@@ -141,13 +141,13 @@ describe('createEvent()', () => {
     const event = createEvent('pointerUp', { nativeEvent });
 
     expect(event).toBeInstanceOf(SyntheticEvent);
-    expect(event?.type).toBe('pointerup');
-    expect(event?.bubbles).toBe(true);
-    expect(event?.cancelable).toBe(true);
-    expect(event?.rnIsDirect).toBe(false);
-    expect(event?.nativeEvent).toBe(nativeEvent);
-    expect(event?.timeStamp).toBe(1234);
-    expect(event?.dispatchConfig).toEqual({
+    expect(event.type).toBe('pointerup');
+    expect(event.bubbles).toBe(true);
+    expect(event.cancelable).toBe(true);
+    expect(event.rnIsDirect).toBe(false);
+    expect(event.nativeEvent).toBe(nativeEvent);
+    expect(event.timeStamp).toBe(1234);
+    expect(event.dispatchConfig).toEqual({
       phasedRegistrationNames: { bubbled: 'onPointerUp', captured: 'onPointerUpCapture' },
     });
   });
@@ -155,9 +155,9 @@ describe('createEvent()', () => {
   test('creates non-bubbling event for skipBubbling event types', () => {
     const event = createEvent('pointerEnter');
 
-    expect(event?.bubbles).toBe(false);
-    expect(event?.rnIsDirect).toBe(false);
-    expect(event?.dispatchConfig).toEqual({
+    expect(event.bubbles).toBe(false);
+    expect(event.rnIsDirect).toBe(false);
+    expect(event.dispatchConfig).toEqual({
       phasedRegistrationNames: {
         bubbled: 'onPointerEnter',
         captured: 'onPointerEnterCapture',
@@ -169,14 +169,14 @@ describe('createEvent()', () => {
   test('creates direct event', () => {
     const event = createEvent('layout');
 
-    expect(event?.type).toBe('layout');
-    expect(event?.bubbles).toBe(false);
-    expect(event?.rnIsDirect).toBe(true);
-    expect(event?.dispatchConfig).toEqual({ registrationName: 'onLayout' });
+    expect(event.type).toBe('layout');
+    expect(event.bubbles).toBe(false);
+    expect(event.rnIsDirect).toBe(true);
+    expect(event.dispatchConfig).toEqual({ registrationName: 'onLayout' });
   });
 
   test('defaults nativeEvent to an empty object', () => {
-    expect(createEvent('focus')?.nativeEvent).toEqual({});
+    expect(createEvent('focus').nativeEvent).toEqual({});
   });
 
   test.each([
@@ -188,11 +188,13 @@ describe('createEvent()', () => {
   ])('takes timeStamp from %p', (init, timeStamp) => {
     jest.spyOn(performance, 'now').mockReturnValue(456);
 
-    expect(createEvent('focus', init)?.timeStamp).toBe(timeStamp);
+    expect(createEvent('focus', init).timeStamp).toBe(timeStamp);
   });
 
-  test('returns null for events unknown to React Native', () => {
-    expect(createEvent('changeText', { nativeEvent: { text: 'Hello' } })).toBeNull();
+  test('throws for events unknown to React Native', () => {
+    expect(() => createEvent('changeText', { nativeEvent: { text: 'Hello' } })).toThrow(
+      '"changeText" is not an event type React Native knows. Pass `dispatch` for a custom event.',
+    );
   });
 
   test('creates direct custom event with dispatch', () => {
@@ -200,19 +202,19 @@ describe('createEvent()', () => {
 
     const event = createEvent('pageSelected', { nativeEvent, dispatch: 'direct' });
 
-    expect(event?.type).toBe('pageselected');
-    expect(event?.bubbles).toBe(false);
-    expect(event?.rnIsDirect).toBe(true);
-    expect(event?.nativeEvent).toBe(nativeEvent);
-    expect(event?.dispatchConfig).toEqual({ registrationName: 'onPageSelected' });
+    expect(event.type).toBe('pageselected');
+    expect(event.bubbles).toBe(false);
+    expect(event.rnIsDirect).toBe(true);
+    expect(event.nativeEvent).toBe(nativeEvent);
+    expect(event.dispatchConfig).toEqual({ registrationName: 'onPageSelected' });
   });
 
   test('creates bubbling custom event with dispatch', () => {
     const event = createEvent('customGesture', { dispatch: 'bubbling' });
 
-    expect(event?.bubbles).toBe(true);
-    expect(event?.rnIsDirect).toBe(false);
-    expect(event?.dispatchConfig).toEqual({
+    expect(event.bubbles).toBe(true);
+    expect(event.rnIsDirect).toBe(false);
+    expect(event.dispatchConfig).toEqual({
       phasedRegistrationNames: { bubbled: 'onCustomGesture', captured: 'onCustomGestureCapture' },
     });
   });
@@ -220,8 +222,8 @@ describe('createEvent()', () => {
   test('overrides the dispatch of events known to React Native with dispatch', () => {
     const event = createEvent('focus', { dispatch: 'direct' });
 
-    expect(event?.bubbles).toBe(false);
-    expect(event?.rnIsDirect).toBe(true);
-    expect(event?.dispatchConfig).toEqual({ registrationName: 'onFocus' });
+    expect(event.bubbles).toBe(false);
+    expect(event.rnIsDirect).toBe(true);
+    expect(event.dispatchConfig).toEqual({ registrationName: 'onFocus' });
   });
 });

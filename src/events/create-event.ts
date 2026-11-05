@@ -4,6 +4,7 @@ import { wrapNativeEvent } from './legacy/builders/base';
 import type { NativeEventPayload, SyntheticEvent } from './modern/event';
 import { createEvent as createModernEvent } from './modern/event';
 import { getEventTypeConfig } from './modern/event-types';
+import type { ScrollEventType } from './shared/event-types';
 import type { ScrollNativeEventOptions } from './shared/payloads';
 import {
   buildAccessibilityActionNativeEvent,
@@ -43,8 +44,7 @@ export function createEvent(
     return wrapNativeEvent(nativeEvent);
   }
 
-  // Not `null`: the event type is known.
-  return createModernEvent(eventType, { nativeEvent }) as SyntheticEvent;
+  return createModernEvent(eventType, { nativeEvent });
 }
 
 export function buildFocusEvent() {
@@ -90,10 +90,3 @@ export function buildTextSelectionChangeEvent(range: TextRange) {
 export function buildContentSizeChangeEvent(size: Size) {
   return createEvent('contentSizeChange', buildContentSizeChangeNativeEvent(size));
 }
-
-type ScrollEventType =
-  | 'scroll'
-  | 'scrollBeginDrag'
-  | 'scrollEndDrag'
-  | 'momentumScrollBegin'
-  | 'momentumScrollEnd';

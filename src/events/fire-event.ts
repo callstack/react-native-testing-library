@@ -2,6 +2,7 @@ import type { TestInstance } from 'test-renderer';
 
 import type { EventSystem } from '../config';
 import { getConfig } from '../config';
+import { normalizeModernFireEventArgs } from './fire-event-args';
 import { fireEvent as legacyFireEvent } from './legacy/fire-event';
 import type { CustomEventDispatch, KnownEventType } from './modern/event-types';
 import type { FireEventInit } from './modern/fire-event';
@@ -72,7 +73,8 @@ async function fireEventImpl(
   ...data: unknown[]
 ): Promise<unknown> {
   if (isModern()) {
-    return await modernFireEvent(instance, eventType, ...(data as [FireEventInit]));
+    const args = normalizeModernFireEventArgs(instance, eventType, data, fireEventImpl);
+    return await modernFireEvent(instance, args.eventType, args.event as FireEventInit | undefined);
   }
 
   return await legacyFireEvent(instance, eventType, ...data);

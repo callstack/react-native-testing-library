@@ -44,3 +44,21 @@ export function getContainerInstance(instance: TestInstance) {
 
   return current;
 }
+
+/**
+ * Returns the element itself or its nearest ancestor that matches the predicate.
+ *
+ * @param instance The element start traversing from.
+ * @returns The matching element, or `null` when there is none.
+ */
+export function findClosestInstance(
+  instance: TestInstance,
+  predicate: (instance: TestInstance) => boolean,
+): TestInstance | null {
+  let current: TestInstance | null = instance;
+  while (current != null && !predicate(current)) {
+    current = current.parent;
+  }
+
+  return current;
+}

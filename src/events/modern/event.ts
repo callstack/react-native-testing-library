@@ -234,16 +234,17 @@ export class SyntheticEvent {
  * declare its own event with a built-in name, e.g. a direct `press`.
  *
  * @param eventType e.g. `focus` or `pointerUp`
- * @returns `null` for events unknown to React Native without `init.dispatch`, as React Native drops
- * them.
+ * @throws for event types React Native doesn't know, without `init.dispatch`.
  */
-export function createEvent(eventType: string, init: CreateEventInit = {}): SyntheticEvent | null {
+export function createEvent(eventType: string, init: CreateEventInit = {}): SyntheticEvent {
   const config =
     init.dispatch != null
       ? getCustomEventTypeConfig(eventType, init.dispatch)
       : getEventTypeConfig(eventType);
   if (config == null) {
-    return null;
+    throw new Error(
+      `"${eventType}" is not an event type React Native knows. Pass \`dispatch\` for a custom event.`,
+    );
   }
 
   const nativeEvent = init.nativeEvent ?? {};
