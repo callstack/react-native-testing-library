@@ -25,6 +25,16 @@ type PressabilityConfig = {
   [Name in PressabilityCallbackName]?: EventHandler | null;
 };
 
+export type PressabilityDispatchResult = {
+  /** The event types whose callback was called. */
+  calledEventTypes: PressabilityEventType[];
+  /**
+   * Whether the touch had an effect: a callback was called, or the responder has no Pressability
+   * (e.g. `PanResponder`) and handles the touch its own way. Diagnostics warn only when `false`.
+   */
+  isHandled: boolean;
+};
+
 type DispatchState = {
   /** Wrapped, so a thrown `undefined` is rethrown too. */
   firstError: { error: unknown } | null;
@@ -56,16 +66,18 @@ type DispatchState = {
  * @param event from `createPressabilityEvent()`, passed to each callback. React Native passes the
  * same event to `onPressIn` and `onLongPress`, and another one to `onPressOut` and `onPress`.
  * @param hitTarget the first element of the touch path from `getTouchPath()`.
- * @returns the event types whose callback was called.
  */
 export async function dispatchPressabilityEvent(
   responder: TestInstance,
   eventTypes: readonly PressabilityEventType[],
   event: SyntheticEvent,
   hitTarget: TestInstance,
-): Promise<PressabilityEventType[]> {
+): Promise<PressabilityDispatchResult> {
+  // A responder without Pressability (e.g. `PanResponder`) handles the touch its own way: its
+  // `onStartShouldSetResponder` claimed it.
+  const isHandledByResponder = !isPressabilityResponder(responder);
   if (!isInstanceMounted(responder)) {
-    return [];
+    return { calledEventTypes: [], isHandled: isHandledByResponder };
   }
 
   const calls = eventTypes.flatMap((eventType) => {
@@ -73,7 +85,7 @@ export async function dispatchPressabilityEvent(
     return callback != null ? [{ eventType, callback }] : [];
   });
   if (calls.length === 0) {
-    return [];
+    return { calledEventTypes: [], isHandled: isHandledByResponder };
   }
 
   const state: DispatchState = { firstError: null };
@@ -99,7 +111,7 @@ export async function dispatchPressabilityEvent(
     throw state.firstError.error;
   }
 
-  return calledEventTypes;
+  return { calledEventTypes, isHandled: true };
 }
 
 /**
@@ -183,7 +195,7 @@ export function findPressResponder(
  * `TextInput`) that claim the touch without `onStartShouldSetResponder`. Other responders, like
  * `PanResponder`, handle touches their own way.
  */
-export function isPressabilityResponder(responder: TestInstance): boolean {
+function isPressabilityResponder(responder: TestInstance): boolean {
   return (
     getPressabilityConfig(responder) != null ||
     getEventHandlerByName(responder.props, 'onStartShouldSetResponder') == null

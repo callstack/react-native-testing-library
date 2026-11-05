@@ -8,7 +8,6 @@ import {
   getDisplayNoneBlocker,
   getPressabilityCallback,
   getTouchPath,
-  isPressabilityResponder,
 } from '../../events/modern/pressability';
 import { createPressabilityEvent } from '../../events/modern/responder-event';
 import type { UserEventConfig } from '../setup';
@@ -55,17 +54,21 @@ export async function emitPressEvents(
     return;
   }
 
-  // A responder without Pressability, like `PanResponder`, handles the touch its own way: its
-  // `onStartShouldSetResponder` claimed it, which counts as a handler call for diagnostics.
-  if (!isPressabilityResponder(responder)) {
-    interaction.recordEvent('startShouldSetResponder', true);
-  }
-
   /** Calls the callbacks in one `act()`, as React Native calls them from one responder event. */
   const dispatch = async (eventTypes: PressabilityEventType[], event: SyntheticEvent) => {
-    const calledEventTypes = await dispatchPressabilityEvent(responder, eventTypes, event, path[0]);
+    const { calledEventTypes, isHandled } = await dispatchPressabilityEvent(
+      responder,
+      eventTypes,
+      event,
+      path[0],
+    );
     for (const eventType of eventTypes) {
       interaction.recordEvent(eventType, calledEventTypes.includes(eventType));
+    }
+
+    // A responder without Pressability, like `PanResponder`, handles the touch its own way.
+    if (isHandled) {
+      interaction.hasCalledHandler = true;
     }
   };
 

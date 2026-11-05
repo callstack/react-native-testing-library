@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { PanResponder, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import type { TestInstance } from 'test-renderer';
 
 import { render, screen } from '../../..';
@@ -23,7 +23,8 @@ async function touch(
   const path = getTouchPath(instance);
   const responder = findResponder(path);
   return responder != null
-    ? (await dispatchPressabilityEvent(responder, [eventType], event, path[0])).length > 0
+    ? (await dispatchPressabilityEvent(responder, [eventType], event, path[0])).calledEventTypes
+        .length > 0
     : false;
 }
 
@@ -165,7 +166,7 @@ test('does not call callbacks of Text disabled during the touch', async () => {
   await dispatchPressabilityEvent(responder, ['pressIn'], createTouchEvent(), path[0]);
   const result = await dispatchPressabilityEvent(responder, ['press'], createTouchEvent(), path[0]);
 
-  expect(result).toEqual([]);
+  expect(result).toEqual({ calledEventTypes: [], isHandled: false });
   expect(onPress).not.toHaveBeenCalled();
 });
 
@@ -178,4 +179,19 @@ test('returns whether the responder had the callback', async () => {
 
   expect(await touch(screen.getByText('Press me'), 'press')).toBe(true);
   expect(await touch(screen.getByText('Press me'), 'longPress')).toBe(false);
+});
+
+test('reports a responder without Pressability as handled', async () => {
+  const panResponder = PanResponder.create({ onStartShouldSetPanResponder: () => true });
+  await render(
+    <View {...panResponder.panHandlers}>
+      <Text>Press me</Text>
+    </View>,
+  );
+  const path = getTouchPath(screen.getByText('Press me'));
+  const responder = findResponder(path) as TestInstance;
+
+  const result = await dispatchPressabilityEvent(responder, ['press'], createTouchEvent(), path[0]);
+
+  expect(result).toEqual({ calledEventTypes: [], isHandled: true });
 });

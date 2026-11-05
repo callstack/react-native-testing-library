@@ -250,11 +250,10 @@ async function firePressabilityEvent(
 
   const path = getTouchPath(instance);
   const { responder, skippedTargets } = findPressResponder(instance, path);
-  const calledEventTypes =
-    responder != null
-      ? await dispatchPressabilityEvent(responder, [eventType], event, path[0])
-      : [];
-  if (calledEventTypes.length === 0) {
+  const isHandled =
+    responder != null &&
+    (await dispatchPressabilityEvent(responder, [eventType], event, path[0])).isHandled;
+  if (!isHandled) {
     warnAboutUnhandledPressabilityEvent(instance, eventType, { path, responder, skippedTargets });
   }
 }

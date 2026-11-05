@@ -12,7 +12,7 @@ import {
 import type { DroppedEventReason } from './emitting-target';
 import type { EventTypeConfig, PressabilityEventType } from './event-types';
 import type { PressResponderResult } from './pressability';
-import { getDisplayNoneBlocker, isPressabilityResponder } from './pressability';
+import { getDisplayNoneBlocker } from './pressability';
 
 /**
  * Warns when `getEmittingTarget()` dropped the event, as the element can't emit it: hidden by
@@ -67,9 +67,8 @@ type UnhandledPressabilityEventInfo = PressResponderResult & {
 };
 
 /**
- * Warns when a Pressability event (`press`, `pressIn`, `pressOut`, `longPress`) called no
- * callback. Doesn't warn when a responder declines the touch on purpose, or when a responder
- * without Pressability (e.g. `PanResponder`) claims it.
+ * Warns when a Pressability event (`press`, `pressIn`, `pressOut`, `longPress`) wasn't handled,
+ * per `dispatchPressabilityEvent()`. Doesn't warn when a responder declines the touch on purpose.
  */
 export function warnAboutUnhandledPressabilityEvent(
   instance: TestInstance,
@@ -108,11 +107,6 @@ function getUnhandledPressabilityEventWarning(
   eventType: PressabilityEventType,
   { path, responder, skippedTargets }: UnhandledPressabilityEventInfo,
 ): EventWarning | null {
-  // A responder without Pressability (e.g. `PanResponder`) handles the touch its own way.
-  if (responder != null && !isPressabilityResponder(responder)) {
-    return null;
-  }
-
   if (path.length === 0) {
     const displayNoneBlocker = getDisplayNoneBlocker(instance);
     if (displayNoneBlocker != null) {
