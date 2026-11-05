@@ -113,14 +113,9 @@ function getUnhandledPressabilityEventWarning(
   eventType: PressabilityEventType,
   { path, responder, skippedTargets }: UnhandledPressabilityEventInfo,
 ): EventWarning | null {
-  const handlerName = getEventHandlerName(eventType);
-  if (responder != null) {
-    return isPressabilityResponder(responder)
-      ? {
-          message: `No "${handlerName}" handler found on the touch responder.`,
-          elements: [responder],
-        }
-      : null;
+  // A responder without Pressability (e.g. `PanResponder`) handles the touch its own way.
+  if (responder != null && !isPressabilityResponder(responder)) {
+    return null;
   }
 
   if (path.length === 0) {
@@ -139,6 +134,14 @@ function getUnhandledPressabilityEventWarning(
   const disabledTargets = skippedTargets.filter(computeAriaDisabled);
   if (disabledTargets.length > 0) {
     return getDisabledWarning(disabledTargets, eventType);
+  }
+
+  const handlerName = getEventHandlerName(eventType);
+  if (responder != null) {
+    return {
+      message: `No "${handlerName}" handler found on the touch responder.`,
+      elements: [responder],
+    };
   }
 
   // A responder declining the touch is a deliberate way of blocking it, so it doesn't warn.

@@ -581,6 +581,36 @@ describe('press', () => {
     `);
   });
 
+  test('warns about the disabled Pressable when its parent responder has no onPress', async () => {
+    await render(
+      <Pressable onLongPress={jest.fn()}>
+        <Pressable onPress={jest.fn()} disabled>
+          <Text>Trigger</Text>
+        </Pressable>
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(getWarnings()).toEqual(['Cannot fire the "press" event on a disabled element.']);
+  });
+
+  test('warns about pointerEvents when the parent responder has no onPress', async () => {
+    await render(
+      <Pressable onLongPress={jest.fn()}>
+        <Pressable onPress={jest.fn()} pointerEvents="none">
+          <Text>Trigger</Text>
+        </Pressable>
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(getWarnings()).toEqual([
+      'Cannot fire the "press" event on an element blocked by pointerEvents.',
+    ]);
+  });
+
   test('does not warn when a custom responder declines the touch', async () => {
     await render(
       <View onStartShouldSetResponder={() => false}>
