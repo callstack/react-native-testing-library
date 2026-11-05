@@ -46,7 +46,8 @@ export async function emitPressEvents(
   instance: TestInstance,
   options: EmitPressOptions,
 ) {
-  const { path, responder, skippedTargets, displayNoneBlocker } = findPressResponder(instance);
+  const { path, responder, responderKind, skippedTargets, displayNoneBlocker } =
+    findPressResponder(instance);
   interaction.skippedTargets.push(...skippedTargets);
   interaction.displayNoneBlocker = displayNoneBlocker;
   if (responder == null) {
@@ -55,10 +56,14 @@ export async function emitPressEvents(
 
   // `press()` moves the target to the element that handles the press.
   interaction.target = responder;
+  // A responder without Pressability, like `PanResponder`, handles the touch its own way.
+  if (responderKind === 'custom') {
+    interaction.hasCalledHandler = true;
+  }
 
   /** Calls the callbacks in one `act()`, as React Native calls them from one responder event. */
   const dispatch = async (eventTypes: PressabilityEventType[], event: SyntheticEvent) => {
-    const { calledEventTypes, isHandled } = await dispatchPressabilityEvent(
+    const { calledEventTypes } = await dispatchPressabilityEvent(
       responder,
       eventTypes,
       event,
@@ -66,11 +71,6 @@ export async function emitPressEvents(
     );
     for (const eventType of eventTypes) {
       interaction.recordEvent(eventType, calledEventTypes.includes(eventType));
-    }
-
-    // A responder without Pressability, like `PanResponder`, handles the touch its own way.
-    if (isHandled) {
-      interaction.hasCalledHandler = true;
     }
   };
 

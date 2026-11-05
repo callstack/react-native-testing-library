@@ -28,11 +28,6 @@ type PressabilityConfig = {
 export type PressabilityDispatchResult = {
   /** The event types whose callback was called. */
   calledEventTypes: PressabilityEventType[];
-  /**
-   * Whether the touch had an effect: a callback was called, or the responder has no Pressability
-   * (e.g. `PanResponder`) and handles the touch its own way. Diagnostics warn only when `false`.
-   */
-  isHandled: boolean;
 };
 
 type DispatchState = {
@@ -73,11 +68,8 @@ export async function dispatchPressabilityEvent(
   event: SyntheticEvent,
   hitTarget: TestInstance,
 ): Promise<PressabilityDispatchResult> {
-  // A responder without Pressability (e.g. `PanResponder`) handles the touch its own way: its
-  // `onStartShouldSetResponder` claimed it.
-  const isHandledByResponder = !isPressabilityResponder(responder);
   if (!isInstanceMounted(responder)) {
-    return { calledEventTypes: [], isHandled: isHandledByResponder };
+    return { calledEventTypes: [] };
   }
 
   const calls = eventTypes.flatMap((eventType) => {
@@ -85,7 +77,7 @@ export async function dispatchPressabilityEvent(
     return callback != null ? [{ eventType, callback }] : [];
   });
   if (calls.length === 0) {
-    return { calledEventTypes: [], isHandled: isHandledByResponder };
+    return { calledEventTypes: [] };
   }
 
   const state: DispatchState = { firstError: null };
@@ -111,7 +103,7 @@ export async function dispatchPressabilityEvent(
     throw state.firstError.error;
   }
 
-  return { calledEventTypes, isHandled: true };
+  return { calledEventTypes };
 }
 
 /**
@@ -148,6 +140,14 @@ export function getDisplayNoneBlocker(instance: TestInstance): TestInstance | nu
   return null;
 }
 
+/**
+ * How the touch responder handles the press: `pressability` through the Pressability callbacks
+ * that `dispatchPressabilityEvent()` calls (`Pressable`, `Touchable*` and mocked hosts like `Text`
+ * and `TextInput`), `custom` its own way (e.g. `PanResponder`, whose `onStartShouldSetResponder`
+ * claimed the touch), or `none` when no element claims the touch.
+ */
+export type PressResponderKind = 'pressability' | 'custom' | 'none';
+
 export type PressResponderResult = {
   /** The touch path of the element, as from `getTouchPath()`. */
   path: TestInstance[];
@@ -155,6 +155,8 @@ export type PressResponderResult = {
   displayNoneBlocker: TestInstance | null;
   /** The touch responder from `findResponder()`, or `null` when no element claims the touch. */
   responder: TestInstance | null;
+  /** How the responder handles the press. */
+  responderKind: PressResponderKind;
   /**
    * Elements from the pressed element up to the responder (or the root) that could handle the
    * press (a Pressability callback or `onStartShouldSetResponder`) but didn't get it, as they are
@@ -189,20 +191,21 @@ export function findPressResponder(instance: TestInstance): PressResponderResult
     skippedTargets.push(instance);
   }
 
-  return { path, displayNoneBlocker, responder, skippedTargets };
+  const responderKind = responder != null ? getResponderKind(responder) : 'none';
+  return { path, displayNoneBlocker, responder, responderKind, skippedTargets };
 }
 
 /**
- * Whether the responder handles touches through Pressability callbacks, which
- * `dispatchPressabilityEvent()` calls: `Pressable` and `Touchable*`, or mocked hosts (`Text`,
- * `TextInput`) that claim the touch without `onStartShouldSetResponder`. Other responders, like
- * `PanResponder`, handle touches their own way.
+ * `pressability` for `Pressable` and `Touchable*`, and for mocked hosts (`Text`, `TextInput`) that
+ * claim the touch without `onStartShouldSetResponder`. `custom` for other responders, like
+ * `PanResponder`. Without `testOnly_pressabilityConfig` (see `dispatchPressabilityEvent()`),
+ * `Pressable` and `Touchable*` count as `custom`.
  */
-function isPressabilityResponder(responder: TestInstance): boolean {
-  return (
-    getPressabilityConfig(responder) != null ||
+function getResponderKind(responder: TestInstance): PressResponderKind {
+  return getPressabilityConfig(responder) != null ||
     getEventHandlerByName(responder.props, 'onStartShouldSetResponder') == null
-  );
+    ? 'pressability'
+    : 'custom';
 }
 
 /**

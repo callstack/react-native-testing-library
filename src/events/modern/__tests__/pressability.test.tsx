@@ -171,7 +171,7 @@ test('does not call callbacks of Text disabled during the touch', async () => {
   await dispatchPressabilityEvent(responder, ['pressIn'], createTouchEvent(), path[0]);
   const result = await dispatchPressabilityEvent(responder, ['press'], createTouchEvent(), path[0]);
 
-  expect(result).toEqual({ calledEventTypes: [], isHandled: false });
+  expect(result).toEqual({ calledEventTypes: [] });
   expect(onPress).not.toHaveBeenCalled();
 });
 
@@ -186,19 +186,18 @@ test('returns whether the responder had the callback', async () => {
   expect(await touch(screen.getByText('Press me'), 'longPress')).toBe(false);
 });
 
-test('reports a responder without Pressability as handled', async () => {
+test('findPressResponder classifies a responder without Pressability as custom', async () => {
   const panResponder = PanResponder.create({ onStartShouldSetPanResponder: () => true });
   await render(
-    <View {...panResponder.panHandlers}>
+    <View testID="pan" {...panResponder.panHandlers}>
       <Text>Press me</Text>
     </View>,
   );
-  const path = getTouchPath(screen.getByText('Press me'));
-  const responder = findResponder(path) as TestInstance;
 
-  const result = await dispatchPressabilityEvent(responder, ['press'], createTouchEvent(), path[0]);
+  const result = findPressResponder(screen.getByText('Press me'));
 
-  expect(result).toEqual({ calledEventTypes: [], isHandled: true });
+  expect(result.responder).toBe(screen.getByTestId('pan'));
+  expect(result.responderKind).toBe('custom');
 });
 
 test('findPressResponder returns the display: none blocker with an empty touch path', async () => {
@@ -216,6 +215,7 @@ test('findPressResponder returns the display: none blocker with an empty touch p
     path: [],
     displayNoneBlocker: screen.getByTestId('hider', options),
     responder: null,
+    responderKind: 'none',
     skippedTargets: [screen.getByTestId('pressable', options)],
   });
 });
@@ -232,6 +232,7 @@ test('findPressResponder returns the touch path and responder of a visible eleme
     path: getTouchPath(text),
     displayNoneBlocker: null,
     responder: screen.getByTestId('pressable'),
+    responderKind: 'pressability',
     skippedTargets: [],
   });
 });

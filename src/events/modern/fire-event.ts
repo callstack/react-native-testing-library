@@ -249,11 +249,13 @@ async function firePressabilityEvent(
   }
 
   const pressResponder = findPressResponder(instance);
-  const { path, responder } = pressResponder;
-  const isHandled =
-    responder != null &&
-    (await dispatchPressabilityEvent(responder, [eventType], event, path[0])).isHandled;
-  if (!isHandled) {
+  const { path, responder, responderKind } = pressResponder;
+  const { calledEventTypes } =
+    responder != null
+      ? await dispatchPressabilityEvent(responder, [eventType], event, path[0])
+      : { calledEventTypes: [] };
+  // A responder without Pressability, like `PanResponder`, handles the touch its own way.
+  if (responderKind !== 'custom' && calledEventTypes.length === 0) {
     warnAboutUnhandledPressabilityEvent(instance, eventType, pressResponder);
   }
 }
