@@ -73,7 +73,7 @@ Some event types get a default payload, as on a device, with the `nativeEvent` y
 - Touch events (`touchStart`, `touchMove`, `touchEnd` and `touchCancel`) get a touch payload. `changedTouches` has the touch, and `touches` has it until the touch ends, unless you pass them.
 - Scroll events (`scroll`, `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin` and `momentumScrollEnd`) get the same scroll payload as [`fireEvent.scroll()`](/docs/api/events/fire-event#scroll), with the `ScrollView`'s current scroll position as `contentOffset` and its size from its last `layout` event as `layoutMeasurement`. The scroll position starts at `0, 0` and changes with each scroll event that passes a `contentOffset`, or with [`userEvent.scrollTo()`](/docs/api/events/user-event#scroll-to). Legacy `fireEvent.scroll()` always starts from `0, 0`. Legacy `fireEvent()` passes only the `nativeEvent` you pass for these, unlike legacy `fireEvent.scroll()`.
 
-Other event types, and events fired with `dispatch`, get `nativeEvent` as you pass it.
+Other event types, and events fired with `dispatch`, get `nativeEvent` as you pass it. This includes `fireEvent.scroll()` with `dispatch`, which gets no default scroll payload, `contentOffset` or `layoutMeasurement`.
 
 ```ts
 await fireEvent(button, 'touchStart', { nativeEvent: { pageX: 100, pageY: 100 } });

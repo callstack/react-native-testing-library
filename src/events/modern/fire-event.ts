@@ -126,7 +126,12 @@ fireEvent.press = async (instance: TestInstance, event: FireEventInit = {}): Pro
   await firePressabilityEvent(instance, 'press', init);
 };
 
-/** Fires a `scroll` event, as `fireEvent(instance, 'scroll', event)` does. */
+/**
+ * Fires a `scroll` event, as `fireEvent(instance, 'scroll', event)` does. The passed `nativeEvent`
+ * is deep merged onto the default scroll payload and native state (see `buildNativeEvent()`). With
+ * `dispatch`, the `nativeEvent` is passed as given, with no default payload or native state merged
+ * in, as the native component that declares the event decides its payload.
+ */
 fireEvent.scroll = async (instance: TestInstance, event: FireEventInit = {}): Promise<void> => {
   ensureInstanceForEvent(instance, 'scroll', fireEvent.scroll);
 

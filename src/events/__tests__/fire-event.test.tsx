@@ -1479,6 +1479,25 @@ describe('fireEvent.scroll', () => {
     expect(onScroll.mock.calls[0][0].nativeEvent).toEqual({ contentOffset: { x: 0, y: 200 } });
   });
 
+  test('fireEvent.scroll() with dispatch passes nativeEvent as given (legacy: merges it onto the default payload)', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onLayout={() => {}} onScroll={onScroll} />);
+    const scrollView = screen.getByTestId('scroll');
+
+    await fireEvent.layout(scrollView, { width: 390, height: 750 });
+    await fireEvent.scroll(scrollView, { nativeEvent: { contentOffset: { x: 0, y: 200 } } });
+    await fireEvent.scroll(scrollView, {
+      nativeEvent: { velocity: { x: 0, y: 1 } },
+      dispatch: 'direct',
+    });
+
+    // Modern: the native component that declares the event decides its payload, so it gets no
+    // default payload or native state.
+    const { nativeEvent } = onScroll.mock.calls[1][0];
+    expect(nativeEvent).toMatchObject({ velocity: { x: 0, y: 1 } });
+    expect(Object.keys(nativeEvent).length === 1).toBe(isModern());
+  });
+
   test('with non-finite x contentOffset value uses 0', async () => {
     const onScroll = jest.fn();
     await render(
