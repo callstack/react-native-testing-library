@@ -108,7 +108,7 @@ export async function dispatchPressabilityEvent(
  * when `pointerEvents` blocks every element, or when `display: none` hides the element.
  */
 export function getTouchPath(target: TestInstance): TestInstance[] {
-  if (isHiddenByDisplayNone(target)) {
+  if (getDisplayNoneBlocker(target) != null) {
     return [];
   }
 
@@ -121,17 +121,73 @@ export function getTouchPath(target: TestInstance): TestInstance[] {
 }
 
 /**
- * Whether `display: none` on the element or an ancestor hides it. A device lays out a hidden view
- * with no frame (iOS doesn't even mount it), so no touch can land on it or its subtree.
+ * The nearest element whose `display: none` hides the element: the element itself or an
+ * ancestor, or `null` when none does. A device lays out a hidden view with no frame (iOS doesn't
+ * even mount it), so no touch can land on it or its subtree.
  */
-function isHiddenByDisplayNone(instance: TestInstance): boolean {
+export function getDisplayNoneBlocker(instance: TestInstance): TestInstance | null {
   for (let current: TestInstance | null = instance; current != null; current = current.parent) {
     if (StyleSheet.flatten(current.props.style)?.display === 'none') {
-      return true;
+      return current;
     }
   }
 
-  return false;
+  return null;
+}
+
+export type PressResponderResult = {
+  /** The touch responder from `findResponder()`, or `null` when no element claims the touch. */
+  responder: TestInstance | null;
+  /**
+   * Elements from the pressed element up to the responder (or the root) that could handle the
+   * press (a Pressability callback or `onStartShouldSetResponder`) but didn't get it, as they are
+   * disabled, decline the touch or are blocked by `pointerEvents`. Nearest first. When hit testing
+   * finds no element and none of them could handle the press, just the pressed element.
+   */
+  skippedTargets: TestInstance[];
+};
+
+/**
+ * Finds the touch responder for a press on the element (`findResponder()`), and the elements it
+ * skipped, for diagnostics.
+ *
+ * @param path the touch path of the element from `getTouchPath()`.
+ */
+export function findPressResponder(
+  instance: TestInstance,
+  path: TestInstance[],
+): PressResponderResult {
+  const responder = findResponder(path);
+
+  const skippedTargets: TestInstance[] = [];
+  let current: TestInstance | null = instance;
+  while (current != null && current !== responder) {
+    if (hasPressEventHandler(current.props) || current.props.onStartShouldSetResponder) {
+      skippedTargets.push(current);
+    }
+
+    current = current.parent;
+  }
+
+  // No element can receive the touch, so the pressed element is skipped too.
+  if (path.length === 0 && skippedTargets.length === 0) {
+    skippedTargets.push(instance);
+  }
+
+  return { responder, skippedTargets };
+}
+
+/**
+ * Whether the responder handles touches through Pressability callbacks, which
+ * `dispatchPressabilityEvent()` calls: `Pressable` and `Touchable*`, or mocked hosts (`Text`,
+ * `TextInput`) that claim the touch without `onStartShouldSetResponder`. Other responders, like
+ * `PanResponder`, handle touches their own way.
+ */
+export function isPressabilityResponder(responder: TestInstance): boolean {
+  return (
+    getPressabilityConfig(responder) != null ||
+    getEventHandlerByName(responder.props, 'onStartShouldSetResponder') == null
+  );
 }
 
 /**

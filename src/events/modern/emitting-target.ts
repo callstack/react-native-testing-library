@@ -4,7 +4,7 @@ import { findClosestInstance } from '../../helpers/component-tree';
 import { isHostSwitch, isHostTextInput } from '../../helpers/host-component-names';
 import { isEditableTextInput } from '../../helpers/text-input';
 import type { CreateEventInit } from './event';
-import { getTouchPath } from './pressability';
+import { getDisplayNoneBlocker, getTouchPath } from './pressability';
 
 /**
  * Native touch and pointer events, which a device emits from the view its hit testing finds, as
@@ -84,4 +84,41 @@ export function getEmittingTarget(
   }
 
   return target;
+}
+
+/** Why `getEmittingTarget()` dropped an event. */
+export type DroppedEventReason =
+  | { kind: 'displayNone'; displayNoneBlocker: TestInstance }
+  | { kind: 'pointerEvents' }
+  | { kind: 'nonEditable'; textInput: TestInstance }
+  | { kind: 'disabledSwitch' };
+
+/**
+ * Why `getEmittingTarget()` returns `null` for the event, for diagnostics, or `null` when it
+ * doesn't drop it. Reads props only.
+ */
+export function getDroppedEventReason(
+  target: TestInstance,
+  eventType: string,
+  init: CreateEventInit,
+): DroppedEventReason | null {
+  if (getEmittingTarget(target, eventType, init) != null) {
+    return null;
+  }
+
+  if (HIT_TESTED_EVENT_TYPES.has(eventType)) {
+    const displayNoneBlocker = getDisplayNoneBlocker(target);
+    return displayNoneBlocker != null
+      ? { kind: 'displayNone', displayNoneBlocker }
+      : { kind: 'pointerEvents' };
+  }
+
+  const textInput = TEXT_EDITING_EVENT_TYPES.has(eventType)
+    ? findClosestInstance(target, isHostTextInput)
+    : null;
+  if (textInput != null) {
+    return { kind: 'nonEditable', textInput };
+  }
+
+  return { kind: 'disabledSwitch' };
 }

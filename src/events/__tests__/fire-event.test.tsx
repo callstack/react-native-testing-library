@@ -1964,11 +1964,15 @@ describe('direct events', () => {
 
       await fireEvent.scroll(screen.getByTestId('child'));
 
-      // Modern matches React Native: direct events don't bubble. Legacy still bubbles them, with
-      // a warning.
-      expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-      if (isModern()) return;
-      expect(warnSpy.mock.calls[0][0]).toContain('"scroll" does not bubble in React Native');
+      // Modern matches React Native: direct events don't bubble, so with eventDiagnostics it warns
+      // that the child has no handler. Legacy still bubbles them, with a warning.
+      const expectedWarning = isModern()
+        ? 'No "onScroll" handler found on the element.'
+        : '"scroll" does not bubble in React Native';
+      const isWarningExpected = !isModern() || eventDiagnostics;
+      expect(warnSpy).toHaveBeenCalledTimes(isWarningExpected ? 1 : 0);
+      if (!isWarningExpected) return;
+      expect(warnSpy.mock.calls[0][0]).toContain(expectedWarning);
     },
   );
 

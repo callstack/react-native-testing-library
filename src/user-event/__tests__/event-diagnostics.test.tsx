@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { PanResponder, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 import { render, screen, userEvent } from '../..';
 import { configure } from '../../config';
@@ -380,4 +380,109 @@ test('does not warn when eventDiagnostics is turned off', async () => {
   await user.press(screen.getByText('No handler'));
 
   expect(warnSpy).not.toHaveBeenCalled();
+});
+
+describe('modern event system', () => {
+  // Legacy `userEvent` ignores `display: none`, doesn't report `pointerEvents` for elements without
+  // handlers and can't press a `PanResponder`.
+  beforeEach(() => {
+    configure({ eventSystem: 'modern' });
+  });
+
+  test.each(['press', 'longPress'] as const)(
+    'warns when display: none hides the element on %s',
+    async (method) => {
+      const onPress = jest.fn();
+      const onLongPress = jest.fn();
+      await render(
+        <View testID="hidden" style={{ display: 'none' }}>
+          <Pressable onPress={onPress} onLongPress={onLongPress}>
+            <Text>Trigger</Text>
+          </Pressable>
+        </View>,
+      );
+      const user = userEvent.setup();
+
+      await user[method](screen.getByText('Trigger', { includeHiddenElements: true }));
+
+      expect(onPress).not.toHaveBeenCalled();
+      expect(onLongPress).not.toHaveBeenCalled();
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy.mock.calls[0][0]).toContain(
+        `${method}() interaction did not call any event handlers. The element is hidden by display: none.`,
+      );
+    },
+  );
+
+  test('warns when display: none hides the pressed element', async () => {
+    await render(
+      <View testID="hidden" style={{ display: 'none' }}>
+        <Pressable onPress={jest.fn()}>
+          <Text>Trigger</Text>
+        </Pressable>
+      </View>,
+    );
+    const user = userEvent.setup();
+
+    await user.press(screen.getByText('Trigger', { includeHiddenElements: true }));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "press() interaction did not call any event handlers. The element is hidden by display: none.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <Text>
+          Trigger
+        </Text>
+
+      Hidden by:
+
+        <View
+          style={
+            {
+              "display": "none",
+            }
+          }
+          testID="hidden"
+        />"
+    `);
+  });
+
+  test('warns when pointerEvents="none" blocks an element without handlers', async () => {
+    await render(
+      <View testID="overlay" pointerEvents="none">
+        <Text>Trigger</Text>
+      </View>,
+    );
+    const user = userEvent.setup();
+
+    await user.longPress(screen.getByText('Trigger'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "longPress() interaction did not call any event handlers. The element is blocked by pointerEvents.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <Text>
+          Trigger
+        </Text>
+
+      Blocked by:
+
+        <View
+          pointerEvents="none"
+          testID="overlay"
+        />"
+    `);
+  });
+
+  test('does not warn when a responder without Pressability claims the touch', async () => {
+    const panResponder = PanResponder.create({ onStartShouldSetPanResponder: () => true });
+    await render(<View testID="view" {...panResponder.panHandlers} />);
+    const user = userEvent.setup();
+
+    await user.press(screen.getByTestId('view'));
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
 });

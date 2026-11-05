@@ -33,8 +33,18 @@ function getUnhandledInteractionWarning({
   target,
   eventNames,
   skippedTargets,
+  displayNoneBlocker,
 }: Interaction): EventWarning | null {
   const summary = `${name}() interaction did not call any event handlers.`;
+
+  // `display: none` is checked first: no touch can land on a hidden element.
+  if (displayNoneBlocker != null) {
+    return {
+      message: `${summary} The element is hidden by display: none.`,
+      elements: [target],
+      displayNoneBlockers: [displayNoneBlocker],
+    };
+  }
 
   // `pointerEvents` is checked first: it blocks the interaction even if the element is enabled.
   const blocked = getPointerEventsBlockedTargets(skippedTargets);

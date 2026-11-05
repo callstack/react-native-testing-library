@@ -12,9 +12,16 @@ export type EventWarning = {
   elements: TestInstance[];
   /** Elements whose `pointerEvents` blocked the event. */
   pointerEventsBlockers?: TestInstance[];
+  /** Elements whose `display: none` hides the elements. */
+  displayNoneBlockers?: TestInstance[];
 };
 
-export function logEventWarning({ message, elements, pointerEventsBlockers = [] }: EventWarning) {
+export function logEventWarning({
+  message,
+  elements,
+  pointerEventsBlockers = [],
+  displayNoneBlockers = [],
+}: EventWarning) {
   const header =
     `${message}\n` +
     'If this is intentional, you can disable this warning via `configure({ eventDiagnostics: false })`.';
@@ -27,7 +34,11 @@ export function logEventWarning({ message, elements, pointerEventsBlockers = [] 
     redent(formatElement(blocker), 2),
   );
   const blockerSection = blockerBlocks.length > 0 ? ['Blocked by:', ...blockerBlocks] : [];
-  logger.warn([header, ...elementBlocks, ...blockerSection].join('\n\n'));
+  const hiderBlocks = [...new Set(displayNoneBlockers)].map((hider) =>
+    redent(formatElement(hider), 2),
+  );
+  const hiderSection = hiderBlocks.length > 0 ? ['Hidden by:', ...hiderBlocks] : [];
+  logger.warn([header, ...elementBlocks, ...hiderSection, ...blockerSection].join('\n\n'));
 }
 
 /**

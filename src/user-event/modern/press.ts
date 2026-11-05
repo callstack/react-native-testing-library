@@ -4,12 +4,13 @@ import type { SyntheticEvent } from '../../events/modern/event';
 import type { PressabilityEventType } from '../../events/modern/event-types';
 import {
   dispatchPressabilityEvent,
-  findResponder,
+  findPressResponder,
+  getDisplayNoneBlocker,
   getPressabilityCallback,
   getTouchPath,
+  isPressabilityResponder,
 } from '../../events/modern/pressability';
 import { createPressabilityEvent } from '../../events/modern/responder-event';
-import { hasPressEventHandler } from '../../events/shared/handler';
 import type { UserEventConfig } from '../setup';
 import type { Interaction } from '../utils';
 import { wait } from '../utils';
@@ -54,6 +55,12 @@ export async function emitPressEvents(
     return;
   }
 
+  // A responder without Pressability, like `PanResponder`, handles the touch its own way: its
+  // `onStartShouldSetResponder` claimed it, which counts as a handler call for diagnostics.
+  if (!isPressabilityResponder(responder)) {
+    interaction.recordEvent('startShouldSetResponder', true);
+  }
+
   /** Calls the callbacks in one `act()`, as React Native calls them from one responder event. */
   const dispatch = async (eventTypes: PressabilityEventType[], event: SyntheticEvent) => {
     const calledEventTypes = await dispatchPressabilityEvent(responder, eventTypes, event, path[0]);
@@ -82,7 +89,8 @@ export async function emitPressEvents(
 /**
  * Sets `interaction.target` to the touch responder, the element modern `fireEvent.press()` calls.
  * Elements between the pressed element and the responder that could handle the press, but are
- * disabled or block touches, are added to `interaction.skippedTargets`.
+ * disabled or block touches, are added to `interaction.skippedTargets`. When `display: none` hides
+ * the element, sets `interaction.displayNoneBlocker`.
  *
  * @returns the responder, or `null` when no element receives the press.
  */
@@ -91,20 +99,15 @@ function findPressTarget(
   instance: TestInstance,
   path: TestInstance[],
 ): TestInstance | null {
-  const touchResponder = findResponder(path);
-
-  let current: TestInstance | null = instance;
-  while (current != null && current !== touchResponder) {
-    if (hasPressEventHandler(current.props) || current.props.onStartShouldSetResponder) {
-      interaction.skippedTargets.push(current);
-    }
-
-    current = current.parent;
+  if (path.length === 0) {
+    interaction.displayNoneBlocker = getDisplayNoneBlocker(instance);
   }
 
-  if (touchResponder != null) {
-    interaction.target = touchResponder;
+  const { responder, skippedTargets } = findPressResponder(instance, path);
+  interaction.skippedTargets.push(...skippedTargets);
+  if (responder != null) {
+    interaction.target = responder;
   }
 
-  return touchResponder;
+  return responder;
 }
