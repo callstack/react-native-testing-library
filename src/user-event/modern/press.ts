@@ -5,9 +5,7 @@ import type { PressabilityEventType } from '../../events/modern/event-types';
 import {
   dispatchPressabilityEvent,
   findPressResponder,
-  getDisplayNoneBlocker,
   getPressabilityCallback,
-  getTouchPath,
 } from '../../events/modern/pressability';
 import { createPressabilityEvent } from '../../events/modern/responder-event';
 import type { UserEventConfig } from '../setup';
@@ -48,11 +46,15 @@ export async function emitPressEvents(
   instance: TestInstance,
   options: EmitPressOptions,
 ) {
-  const path = getTouchPath(instance);
-  const responder = findPressTarget(interaction, instance, path);
+  const { path, responder, skippedTargets, displayNoneBlocker } = findPressResponder(instance);
+  interaction.skippedTargets.push(...skippedTargets);
+  interaction.displayNoneBlocker = displayNoneBlocker;
   if (responder == null) {
     return;
   }
+
+  // `press()` moves the target to the element that handles the press.
+  interaction.target = responder;
 
   /** Calls the callbacks in one `act()`, as React Native calls them from one responder event. */
   const dispatch = async (eventTypes: PressabilityEventType[], event: SyntheticEvent) => {
@@ -87,30 +89,4 @@ export async function emitPressEvents(
     isLongPress && getPressabilityCallback(responder, 'longPress') != null;
   const pressEndEvent = createPressabilityEvent('pressOut');
   await dispatch(isPressCanceledByLongPress ? ['pressOut'] : ['pressOut', 'press'], pressEndEvent);
-}
-
-/**
- * Sets `interaction.target` to the touch responder, the element modern `fireEvent.press()` calls.
- * Elements between the pressed element and the responder that could handle the press, but are
- * disabled or block touches, are added to `interaction.skippedTargets`. When `display: none` hides
- * the element, sets `interaction.displayNoneBlocker`.
- *
- * @returns the responder, or `null` when no element receives the press.
- */
-function findPressTarget(
-  interaction: Interaction,
-  instance: TestInstance,
-  path: TestInstance[],
-): TestInstance | null {
-  if (path.length === 0) {
-    interaction.displayNoneBlocker = getDisplayNoneBlocker(instance);
-  }
-
-  const { responder, skippedTargets } = findPressResponder(instance, path);
-  interaction.skippedTargets.push(...skippedTargets);
-  if (responder != null) {
-    interaction.target = responder;
-  }
-
-  return responder;
 }

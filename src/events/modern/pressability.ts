@@ -120,10 +120,11 @@ export async function dispatchPressabilityEvent(
  * when `pointerEvents` blocks every element, or when `display: none` hides the element.
  */
 export function getTouchPath(target: TestInstance): TestInstance[] {
-  if (getDisplayNoneBlocker(target) != null) {
-    return [];
-  }
+  return getDisplayNoneBlocker(target) != null ? [] : getVisibleTouchPath(target);
+}
 
+/** `getTouchPath()` for an element that `display: none` doesn't hide. */
+function getVisibleTouchPath(target: TestInstance): TestInstance[] {
   let hitTarget = target;
   while (hitTarget.parent != null && getPointerEventsBlocker(hitTarget) != null) {
     hitTarget = hitTarget.parent;
@@ -148,6 +149,10 @@ export function getDisplayNoneBlocker(instance: TestInstance): TestInstance | nu
 }
 
 export type PressResponderResult = {
+  /** The touch path of the element, as from `getTouchPath()`. */
+  path: TestInstance[];
+  /** The element whose `display: none` hides the element, from `getDisplayNoneBlocker()`. */
+  displayNoneBlocker: TestInstance | null;
   /** The touch responder from `findResponder()`, or `null` when no element claims the touch. */
   responder: TestInstance | null;
   /**
@@ -160,15 +165,13 @@ export type PressResponderResult = {
 };
 
 /**
- * Finds the touch responder for a press on the element (`findResponder()`), and the elements it
- * skipped, for diagnostics.
- *
- * @param path the touch path of the element from `getTouchPath()`.
+ * Hit tests a press on the element (`getTouchPath()`) and finds its touch responder
+ * (`findResponder()`), with what blocked it for diagnostics: the `display: none` blocker and the
+ * skipped elements.
  */
-export function findPressResponder(
-  instance: TestInstance,
-  path: TestInstance[],
-): PressResponderResult {
+export function findPressResponder(instance: TestInstance): PressResponderResult {
+  const displayNoneBlocker = getDisplayNoneBlocker(instance);
+  const path = displayNoneBlocker != null ? [] : getVisibleTouchPath(instance);
   const responder = findResponder(path);
 
   const skippedTargets: TestInstance[] = [];
@@ -186,7 +189,7 @@ export function findPressResponder(
     skippedTargets.push(instance);
   }
 
-  return { responder, skippedTargets };
+  return { path, displayNoneBlocker, responder, skippedTargets };
 }
 
 /**

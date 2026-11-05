@@ -2,10 +2,9 @@ import { getConfig } from '../../config';
 import type { EventWarning } from '../../events/shared/warnings';
 import {
   formatDisabledTargets,
-  getPointerEventsBlockedTargets,
+  getPressBlockedReason,
   logEventWarning,
 } from '../../events/shared/warnings';
-import { computeAriaDisabled } from '../../helpers/accessibility';
 import type { Interaction } from './interaction';
 
 /**
@@ -37,34 +36,28 @@ function getUnhandledInteractionWarning({
 }: Interaction): EventWarning | null {
   const summary = `${name}() interaction did not call any event handlers.`;
 
-  // `display: none` is checked first: no touch can land on a hidden element.
-  if (displayNoneBlocker != null) {
-    return {
-      message: `${summary} The element is hidden by display: none.`,
-      elements: [target],
-      displayNoneBlockers: [displayNoneBlocker],
-    };
-  }
-
-  // `pointerEvents` is checked first: it blocks the interaction even if the element is enabled.
-  const blocked = getPointerEventsBlockedTargets(skippedTargets);
-  if (blocked != null) {
-    return {
-      message:
-        blocked.elements.length === 1
-          ? `${summary} The element is blocked by pointerEvents.`
-          : `${summary} The elements are blocked by pointerEvents.`,
-      ...blocked,
-    };
-  }
-
-  // `computeAriaDisabled` also covers non-editable `TextInput`.
-  const disabledTargets = skippedTargets.filter(computeAriaDisabled);
-  if (disabledTargets.length > 0) {
-    return {
-      message: `${summary} Cannot interact with ${formatDisabledTargets(disabledTargets)}.`,
-      elements: disabledTargets,
-    };
+  const blockedReason = getPressBlockedReason(skippedTargets, displayNoneBlocker);
+  switch (blockedReason?.kind) {
+    case 'displayNone':
+      return {
+        message: `${summary} The element is hidden by display: none.`,
+        elements: [target],
+        displayNoneBlockers: [blockedReason.displayNoneBlocker],
+      };
+    case 'pointerEvents':
+      return {
+        message:
+          blockedReason.elements.length === 1
+            ? `${summary} The element is blocked by pointerEvents.`
+            : `${summary} The elements are blocked by pointerEvents.`,
+        elements: blockedReason.elements,
+        pointerEventsBlockers: blockedReason.pointerEventsBlockers,
+      };
+    case 'disabled':
+      return {
+        message: `${summary} Cannot interact with ${formatDisabledTargets(blockedReason.elements)}.`,
+        elements: blockedReason.elements,
+      };
   }
 
   if (eventNames.length === 0) {

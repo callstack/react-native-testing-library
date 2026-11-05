@@ -24,7 +24,7 @@ import { createEvent, getEventInternals } from './event';
 import type { PressabilityEventType } from './event-types';
 import { isPressabilityEventType } from './event-types';
 import { ensureEventType, validateChangeTextArgs, validateEventInit } from './fire-event-utils';
-import { dispatchPressabilityEvent, findPressResponder, getTouchPath } from './pressability';
+import { dispatchPressabilityEvent, findPressResponder } from './pressability';
 import { createPressabilityEvent } from './responder-event';
 import { buildTouchPayload } from './touch-payload';
 import {
@@ -248,12 +248,12 @@ async function firePressabilityEvent(
     return;
   }
 
-  const path = getTouchPath(instance);
-  const { responder, skippedTargets } = findPressResponder(instance, path);
+  const pressResponder = findPressResponder(instance);
+  const { path, responder } = pressResponder;
   const isHandled =
     responder != null &&
     (await dispatchPressabilityEvent(responder, [eventType], event, path[0])).isHandled;
   if (!isHandled) {
-    warnAboutUnhandledPressabilityEvent(instance, eventType, { path, responder, skippedTargets });
+    warnAboutUnhandledPressabilityEvent(instance, eventType, pressResponder);
   }
 }

@@ -8,7 +8,12 @@ import type { SyntheticEvent } from '../event';
 import { createEvent } from '../event';
 import type { PressabilityEventType } from '../event-types';
 import { PRESSABILITY_EVENT_TYPES } from '../event-types';
-import { dispatchPressabilityEvent, findResponder, getTouchPath } from '../pressability';
+import {
+  dispatchPressabilityEvent,
+  findPressResponder,
+  findResponder,
+  getTouchPath,
+} from '../pressability';
 
 function createTouchEvent() {
   return createEvent('touchEnd', { nativeEvent: { pageX: 10 } });
@@ -194,4 +199,39 @@ test('reports a responder without Pressability as handled', async () => {
   const result = await dispatchPressabilityEvent(responder, ['press'], createTouchEvent(), path[0]);
 
   expect(result).toEqual({ calledEventTypes: [], isHandled: true });
+});
+
+test('findPressResponder returns the display: none blocker with an empty touch path', async () => {
+  await render(
+    <View testID="hider" style={{ display: 'none' }}>
+      <Pressable testID="pressable" onPress={jest.fn()}>
+        <Text>Press me</Text>
+      </Pressable>
+    </View>,
+  );
+
+  const options = { includeHiddenElements: true };
+
+  expect(findPressResponder(screen.getByText('Press me', options))).toEqual({
+    path: [],
+    displayNoneBlocker: screen.getByTestId('hider', options),
+    responder: null,
+    skippedTargets: [screen.getByTestId('pressable', options)],
+  });
+});
+
+test('findPressResponder returns the touch path and responder of a visible element', async () => {
+  await render(
+    <Pressable testID="pressable" onPress={jest.fn()}>
+      <Text>Press me</Text>
+    </Pressable>,
+  );
+  const text = screen.getByText('Press me');
+
+  expect(findPressResponder(text)).toEqual({
+    path: getTouchPath(text),
+    displayNoneBlocker: null,
+    responder: screen.getByTestId('pressable'),
+    skippedTargets: [],
+  });
 });

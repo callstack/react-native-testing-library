@@ -1,18 +1,17 @@
 import type { TestInstance } from 'test-renderer';
 
 import { getConfig } from '../../config';
-import { computeAriaDisabled } from '../../helpers/accessibility';
 import { getEventHandlerName } from '../shared/handler';
 import type { EventWarning } from '../shared/warnings';
 import {
   formatDisabledTargets,
   getPointerEventsBlockedTargets,
+  getPressBlockedReason,
   logEventWarning,
 } from '../shared/warnings';
 import type { DroppedEventReason } from './emitting-target';
 import type { EventTypeConfig, PressabilityEventType } from './event-types';
 import type { PressResponderResult } from './pressability';
-import { getDisplayNoneBlocker } from './pressability';
 
 /**
  * Warns when `getEmittingTarget()` dropped the event, as the element can't emit it: hidden by
@@ -61,11 +60,6 @@ export function warnAboutUnhandledEvent(
   });
 }
 
-type UnhandledPressabilityEventInfo = PressResponderResult & {
-  /** The touch path from `getTouchPath()`. */
-  path: TestInstance[];
-};
-
 /**
  * Warns when a Pressability event (`press`, `pressIn`, `pressOut`, `longPress`) wasn't handled,
  * per `dispatchPressabilityEvent()`. Doesn't warn when a responder declines the touch on purpose.
@@ -73,7 +67,7 @@ type UnhandledPressabilityEventInfo = PressResponderResult & {
 export function warnAboutUnhandledPressabilityEvent(
   instance: TestInstance,
   eventType: PressabilityEventType,
-  info: UnhandledPressabilityEventInfo,
+  info: PressResponderResult,
 ) {
   if (!getConfig().eventDiagnostics) {
     return;
@@ -105,24 +99,16 @@ function getDroppedEventWarning(
 function getUnhandledPressabilityEventWarning(
   instance: TestInstance,
   eventType: PressabilityEventType,
-  { path, responder, skippedTargets }: UnhandledPressabilityEventInfo,
+  { displayNoneBlocker, responder, skippedTargets }: PressResponderResult,
 ): EventWarning | null {
-  if (path.length === 0) {
-    const displayNoneBlocker = getDisplayNoneBlocker(instance);
-    if (displayNoneBlocker != null) {
-      return getDisplayNoneWarning(instance, eventType, displayNoneBlocker);
-    }
-  }
-
-  // `pointerEvents` is checked first: it blocks the touch even if the element is enabled.
-  const blockedWarning = getPointerEventsWarning(skippedTargets, eventType);
-  if (blockedWarning != null) {
-    return blockedWarning;
-  }
-
-  const disabledTargets = skippedTargets.filter(computeAriaDisabled);
-  if (disabledTargets.length > 0) {
-    return getDisabledWarning(disabledTargets, eventType);
+  const blockedReason = getPressBlockedReason(skippedTargets, displayNoneBlocker);
+  switch (blockedReason?.kind) {
+    case 'displayNone':
+      return getDisplayNoneWarning(instance, eventType, blockedReason.displayNoneBlocker);
+    case 'pointerEvents':
+      return getPointerEventsWarningMessage(blockedReason, eventType);
+    case 'disabled':
+      return getDisabledWarning(blockedReason.elements, eventType);
   }
 
   const handlerName = getEventHandlerName(eventType);
@@ -158,16 +144,20 @@ function getDisplayNoneWarning(
 
 function getPointerEventsWarning(targets: TestInstance[], eventType: string): EventWarning | null {
   const blocked = getPointerEventsBlockedTargets(targets);
-  if (blocked == null) {
-    return null;
-  }
+  return blocked != null ? getPointerEventsWarningMessage(blocked, eventType) : null;
+}
 
+function getPointerEventsWarningMessage(
+  blocked: Pick<EventWarning, 'elements' | 'pointerEventsBlockers'>,
+  eventType: string,
+): EventWarning {
   return {
     message:
       blocked.elements.length === 1
         ? `Cannot fire the "${eventType}" event on an element blocked by pointerEvents.`
         : `Cannot fire the "${eventType}" event on elements blocked by pointerEvents.`,
-    ...blocked,
+    elements: blocked.elements,
+    pointerEventsBlockers: blocked.pointerEventsBlockers,
   };
 }
 

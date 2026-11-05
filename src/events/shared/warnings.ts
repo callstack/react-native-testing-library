@@ -1,6 +1,7 @@
 import redent from 'redent';
 import type { TestInstance } from 'test-renderer';
 
+import { computeAriaDisabled } from '../../helpers/accessibility';
 import { formatElement, formatJson } from '../../helpers/format-element';
 import { isHostTextInput } from '../../helpers/host-component-names';
 import { logger } from '../../helpers/logger';
@@ -61,6 +62,43 @@ export function getPointerEventsBlockedTargets(
   }
 
   return elements.length > 0 ? { elements, pointerEventsBlockers } : null;
+}
+
+export type PressBlockedReason =
+  | { kind: 'displayNone'; displayNoneBlocker: TestInstance }
+  | ({ kind: 'pointerEvents' } & Pick<EventWarning, 'elements' | 'pointerEventsBlockers'>)
+  | { kind: 'disabled'; elements: TestInstance[] };
+
+/**
+ * Why a press (or other `userEvent` interaction) didn't reach a handler, in order of precedence:
+ * `display: none` hides the element (no touch can land on it), `pointerEvents` blocks skipped
+ * elements (even enabled ones), or skipped elements are disabled (`computeAriaDisabled` also
+ * covers non-editable `TextInput`). Both modern `fireEvent` and `userEvent` build their warnings
+ * from it.
+ *
+ * @param skippedTargets elements that could handle the press but didn't get it, nearest first.
+ * @returns `null` when nothing blocked it, e.g. a responder declined the touch or no element has
+ * a handler.
+ */
+export function getPressBlockedReason(
+  skippedTargets: TestInstance[],
+  displayNoneBlocker: TestInstance | null,
+): PressBlockedReason | null {
+  if (displayNoneBlocker != null) {
+    return { kind: 'displayNone', displayNoneBlocker };
+  }
+
+  const blocked = getPointerEventsBlockedTargets(skippedTargets);
+  if (blocked != null) {
+    return { kind: 'pointerEvents', ...blocked };
+  }
+
+  const disabledTargets = skippedTargets.filter(computeAriaDisabled);
+  if (disabledTargets.length > 0) {
+    return { kind: 'disabled', elements: disabledTargets };
+  }
+
+  return null;
 }
 
 /**
