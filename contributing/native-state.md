@@ -5,13 +5,13 @@ On a device, some component state lives in native views, not in React. Jest has 
 ## What is stored
 
 - **`TextInput` value** (`valueForInstance`): the text in an uncontrolled `TextInput`. Without it, the input would show no text after `user.type()`.
-- **`ScrollView` content offset** (`contentOffsetForInstance`): the current scroll position. Without it, every `scrollTo()` would start from `0, 0`.
+- **`ScrollView` content offset** (`contentOffsetForInstance`): the current scroll position. Without it, every `scrollTo()` would start from `0, 0`. Modern `fireEvent` scroll events use it as the default `contentOffset`.
 - **Layout size** (`layoutSizeForInstance`): an element's width and height from the last `layout` event. Scroll events use it as the `ScrollView`'s default `layoutMeasurement`.
 
 ## Key points
 
 - **Writes.** `fireEvent` and `userEvent` update native state when they simulate a change that a native view would make. Both `fireEvent` implementations do it through `updateNativeStateFromEvent()` in `src/events/shared/native-state.ts`. It saves the `TextInput` value from `changeText` and `change` events (`nativeEvent.text`). Each `userEvent` action writes it directly.
-- **Reads.** Helpers read native state, like `getTextInputValue()` in `src/helpers/text-input.ts`. Queries and matchers use those helpers instead of reading native state directly. Event payloads read it through `getNativeStateEventProps()`, next to `updateNativeStateFromEvent()`. Modern `fireEvent` applies it centrally, in `fireEventInternal()`, to the default payload of `fireEvent.scroll()` and `fireEvent.layout()`.
+- **Reads.** Helpers read native state, like `getTextInputValue()` in `src/helpers/text-input.ts`. Queries and matchers use those helpers instead of reading native state directly. Event payloads read it through `getNativeStateEventProps()`, next to `updateNativeStateFromEvent()`. Modern `fireEvent` applies it centrally, in `buildNativeEvent()`, to the default payload of scroll events, and also reads `contentOffsetForInstance` there. Legacy `fireEvent.scroll()` reads only the layout size, so its `contentOffset` defaults to `0, 0`.
 - **Props win.** A controlled prop (like `value`) always takes precedence over native state.
 - **No reset.** State is stored in `WeakMap`s keyed by host instance. It disappears when the instance is unmounted, so `cleanup()` doesn't need to clear it.
 - **Internal.** Native state isn't part of the public API.

@@ -5,7 +5,11 @@ import { ensureInstanceForEvent } from '../shared/assertions';
 import { isActiveTouchEventType, isScrollEventType, isTouchEventType } from '../shared/event-types';
 import { getEventHandlerByEventType } from '../shared/handler';
 import { mergeEventProps } from '../shared/merge';
-import { getNativeStateEventProps, updateNativeStateFromEvent } from '../shared/native-state';
+import {
+  getNativeStateEventProps,
+  nativeState,
+  updateNativeStateFromEvent,
+} from '../shared/native-state';
 import {
   buildLayoutNativeEvent,
   buildScrollNativeEvent,
@@ -171,8 +175,8 @@ async function fireEventInternal(
  * - Touch events (`touchStart`, `touchMove`, `touchEnd`, `touchCancel`): a default touch payload,
  *   as `fireEvent.press()` uses.
  * - Scroll events (`scroll`, `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin`,
- *   `momentumScrollEnd`): a default scroll payload, whose `layoutMeasurement` is the `ScrollView`'s
- *   size from its last `layout` event.
+ *   `momentumScrollEnd`): a default scroll payload, whose `contentOffset` is the `ScrollView`'s
+ *   current scroll position and whose `layoutMeasurement` is its size from its last `layout` event.
  *
  * Other event types, and events with `dispatch`, whose native component decides the payload, get
  * the passed `nativeEvent` as is.
@@ -192,7 +196,7 @@ function buildNativeEvent(
 
   if (isScrollEventType(eventType)) {
     return mergeEventProps(
-      buildScrollNativeEvent(),
+      buildScrollNativeEvent(nativeState.contentOffsetForInstance.get(target)),
       getNativeStateEventProps(target, eventType),
       init.nativeEvent,
     );

@@ -1425,6 +1425,46 @@ describe('fireEvent.scroll', () => {
     },
   );
 
+  test.each([
+    'scroll',
+    'scrollBeginDrag',
+    'scrollEndDrag',
+    'momentumScrollBegin',
+    'momentumScrollEnd',
+  ])(
+    'fireEvent() with %s without contentOffset keeps the current scroll position (legacy: the event object as given)',
+    async (eventType) => {
+      const handler = jest.fn();
+      await render(
+        <ScrollView testID="scroll" {...{ [getEventHandlerName(eventType)]: handler }} />,
+      );
+      const scrollView = screen.getByTestId('scroll');
+
+      await fireEvent.scroll(scrollView, { nativeEvent: { contentOffset: { x: 0, y: 200 } } });
+      await fireEvent(scrollView, eventType, { nativeEvent: { velocity: { x: 0, y: 1 } } });
+
+      // Modern matches a device, which sends the current scroll position with every scroll event.
+      const lastEvent = handler.mock.calls[handler.mock.calls.length - 1][0];
+      expect(lastEvent.nativeEvent.contentOffset).toEqual(
+        isModern() ? { x: 0, y: 200 } : undefined,
+      );
+      expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({ x: 0, y: 200 });
+    },
+  );
+
+  test('fireEvent.scroll() without contentOffset keeps the current scroll position (legacy: scrolls to (0, 0))', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+    const scrollView = screen.getByTestId('scroll');
+
+    await fireEvent.scroll(scrollView, { nativeEvent: { contentOffset: { x: 0, y: 200 } } });
+    await fireEvent.scroll(scrollView);
+
+    const offset = isModern() ? { x: 0, y: 200 } : { x: 0, y: 0 };
+    expect(onScroll.mock.calls[1][0].nativeEvent.contentOffset).toEqual(offset);
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual(offset);
+  });
+
   test('fireEvent() with scroll event and dispatch passes nativeEvent as given', async () => {
     const onScroll = jest.fn();
     await render(<ScrollView testID="scroll" onScroll={onScroll} />);
