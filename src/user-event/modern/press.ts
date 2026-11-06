@@ -1,13 +1,16 @@
 import type { TestInstance } from 'test-renderer';
 
+import { getConfig } from '../../config';
 import type { SyntheticEvent } from '../../events/modern/event';
 import type { PressabilityEventType } from '../../events/modern/event-types';
 import {
   dispatchPressabilityEvent,
-  findPressResponder,
+  findTouchResponder,
   getPressabilityCallback,
+  getTouchPath,
 } from '../../events/modern/pressability';
 import { createPressabilityEvent } from '../../events/modern/responder-event';
+import { getPressDiagnostics } from '../../events/modern/warnings';
 import type { UserEventConfig } from '../setup';
 import type { Interaction } from '../utils';
 import { wait } from '../utils';
@@ -46,18 +49,26 @@ export async function emitPressEvents(
   instance: TestInstance,
   options: EmitPressOptions,
 ) {
-  const { path, responder, responderKind, skippedTargets, displayNoneBlocker } =
-    findPressResponder(instance);
-  interaction.skippedTargets.push(...skippedTargets);
-  interaction.displayNoneBlocker = displayNoneBlocker;
-  if (responder == null) {
+  const path = getTouchPath(instance);
+  const touchResponder = findTouchResponder(path);
+  if (getConfig().eventDiagnostics) {
+    const { skippedTargets, displayNoneBlocker } = getPressDiagnostics(
+      instance,
+      touchResponder?.instance ?? null,
+    );
+    interaction.skippedTargets.push(...skippedTargets);
+    interaction.displayNoneBlocker = displayNoneBlocker;
+  }
+
+  if (touchResponder == null) {
     return;
   }
 
+  const responder = touchResponder.instance;
   // `press()` moves the target to the element that handles the press.
   interaction.target = responder;
   // A responder without Pressability, like `PanResponder`, handles the touch its own way.
-  if (responderKind === 'custom') {
+  if (touchResponder.kind === 'responderHandlers') {
     interaction.hasCalledHandler = true;
   }
 

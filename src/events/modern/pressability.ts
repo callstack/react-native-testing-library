@@ -37,7 +37,7 @@ type DispatchState = {
 
 /**
  * Calls Pressability callbacks (`onPress` for `press`, `onPressIn` for `pressIn`, ...) of the
- * touch responder from `findResponder()`, in order: from its `PressabilityConfig` for `Pressable` and
+ * touch responder from `findTouchResponder()`, in order: from its `PressabilityConfig` for `Pressable` and
  * `Touchable*`, which Pressability exposes in tests as
  * `onStartShouldSetResponder.testOnly_pressabilityConfig()`, or its own `onPress*` prop (or the
  * `testOnly_` variant) for mocked hosts. Responders without Pressability, like `PanResponder`, get
@@ -112,11 +112,10 @@ export async function dispatchPressabilityEvent(
  * when `pointerEvents` blocks every element, or when `display: none` hides the element.
  */
 export function getTouchPath(target: TestInstance): TestInstance[] {
-  return getDisplayNoneBlocker(target) != null ? [] : getVisibleTouchPath(target);
-}
+  if (getDisplayNoneBlocker(target) != null) {
+    return [];
+  }
 
-/** `getTouchPath()` for an element that `display: none` doesn't hide. */
-function getVisibleTouchPath(target: TestInstance): TestInstance[] {
   let hitTarget = target;
   while (hitTarget.parent != null && getPointerEventsBlocker(hitTarget) != null) {
     hitTarget = hitTarget.parent;
@@ -141,72 +140,26 @@ export function getDisplayNoneBlocker(instance: TestInstance): TestInstance | nu
 }
 
 /**
- * How the touch responder handles the press: `pressability` through the Pressability callbacks
- * that `dispatchPressabilityEvent()` calls (`Pressable`, `Touchable*` and mocked hosts like `Text`
- * and `TextInput`), `custom` its own way (e.g. `PanResponder`, whose `onStartShouldSetResponder`
- * claimed the touch), or `none` when no element claims the touch.
+ * How a touch responder from `findTouchResponder()` handles the press, i.e. which callbacks
+ * `dispatchPressabilityEvent()` can call on it:
+ *
+ * - `pressabilityConfig`: `Pressable` and `Touchable*`. They claim the touch with
+ *   `onStartShouldSetResponder`, and their callbacks come from its `testOnly_pressabilityConfig`.
+ * - `pressHandlers`: hosts the Jest preset mocks (`Text`, `TextInput`). They claim the touch without
+ *   `onStartShouldSetResponder`, and their callbacks are their own `onPress*` props.
+ * - `responderHandlers`: elements whose own `onStartShouldSetResponder` claims the touch without a
+ *   Pressability config, e.g. `PanResponder`. They handle the touch with responder handlers
+ *   (`onResponderGrant`, `onResponderRelease`, ...), which press dispatch doesn't call, so no
+ *   press callback being called is expected. Also `Pressable` and `Touchable*` when
+ *   `testOnly_pressabilityConfig` is missing (see `dispatchPressabilityEvent()`).
  */
-export type PressResponderKind = 'pressability' | 'custom' | 'none';
+export type TouchResponderKind = 'pressabilityConfig' | 'pressHandlers' | 'responderHandlers';
 
-export type PressResponderResult = {
-  /** The touch path of the element, as from `getTouchPath()`. */
-  path: TestInstance[];
-  /** The element whose `display: none` hides the element, from `getDisplayNoneBlocker()`. */
-  displayNoneBlocker: TestInstance | null;
-  /** The touch responder from `findResponder()`, or `null` when no element claims the touch. */
-  responder: TestInstance | null;
-  /** How the responder handles the press. */
-  responderKind: PressResponderKind;
-  /**
-   * Elements from the pressed element up to the responder (or the root) that could handle the
-   * press (a Pressability callback or `onStartShouldSetResponder`) but didn't get it, as they are
-   * disabled, decline the touch or are blocked by `pointerEvents`. Nearest first. When hit testing
-   * finds no element and none of them could handle the press, just the pressed element.
-   */
-  skippedTargets: TestInstance[];
+/** The touch responder from `findTouchResponder()`, with how it handles the press. */
+export type TouchResponder = {
+  instance: TestInstance;
+  kind: TouchResponderKind;
 };
-
-/**
- * Hit tests a press on the element (`getTouchPath()`) and finds its touch responder
- * (`findResponder()`), with what blocked it for diagnostics: the `display: none` blocker and the
- * skipped elements.
- */
-export function findPressResponder(instance: TestInstance): PressResponderResult {
-  const displayNoneBlocker = getDisplayNoneBlocker(instance);
-  const path = displayNoneBlocker != null ? [] : getVisibleTouchPath(instance);
-  const responder = findResponder(path);
-
-  const skippedTargets: TestInstance[] = [];
-  let current: TestInstance | null = instance;
-  while (current != null && current !== responder) {
-    if (hasPressEventHandler(current.props) || current.props.onStartShouldSetResponder) {
-      skippedTargets.push(current);
-    }
-
-    current = current.parent;
-  }
-
-  // No element can receive the touch, so the pressed element is skipped too.
-  if (path.length === 0 && skippedTargets.length === 0) {
-    skippedTargets.push(instance);
-  }
-
-  const responderKind = responder != null ? getResponderKind(responder) : 'none';
-  return { path, displayNoneBlocker, responder, responderKind, skippedTargets };
-}
-
-/**
- * `pressability` for `Pressable` and `Touchable*`, and for mocked hosts (`Text`, `TextInput`) that
- * claim the touch without `onStartShouldSetResponder`. `custom` for other responders, like
- * `PanResponder`. Without `testOnly_pressabilityConfig` (see `dispatchPressabilityEvent()`),
- * `Pressable` and `Touchable*` count as `custom`.
- */
-function getResponderKind(responder: TestInstance): PressResponderKind {
-  return getPressabilityConfig(responder) != null ||
-    getEventHandlerByName(responder.props, 'onStartShouldSetResponder') == null
-    ? 'pressability'
-    : 'custom';
-}
 
 /**
  * Responder negotiation, as React Native's `ResponderEventPlugin` does on touch start:
@@ -228,11 +181,18 @@ function getResponderKind(responder: TestInstance): PressResponderKind {
  * @param path the touch path from `getTouchPath()`.
  * @returns the first element on the path that claims the touch, or `null` when none does.
  */
-export function findResponder(path: TestInstance[]): TestInstance | null {
+export function findTouchResponder(path: TestInstance[]): TouchResponder | null {
   for (const node of path) {
     const handler = getEventHandlerByName(node.props, 'onStartShouldSetResponder');
-    if (handler != null ? handler.call(node) : claimsTouchWithoutResponder(node)) {
-      return node;
+    if (handler == null) {
+      if (claimsTouchWithoutResponder(node)) {
+        return { instance: node, kind: 'pressHandlers' };
+      }
+    } else if (handler.call(node)) {
+      return {
+        instance: node,
+        kind: getPressabilityConfig(node) != null ? 'pressabilityConfig' : 'responderHandlers',
+      };
     }
   }
 

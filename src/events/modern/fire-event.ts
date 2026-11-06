@@ -24,7 +24,7 @@ import { createEvent, getEventInternals } from './event';
 import type { PressabilityEventType } from './event-types';
 import { isPressabilityEventType } from './event-types';
 import { ensureEventType, validateChangeTextArgs, validateEventInit } from './fire-event-utils';
-import { dispatchPressabilityEvent, findPressResponder } from './pressability';
+import { dispatchPressabilityEvent, findTouchResponder, getTouchPath } from './pressability';
 import { createPressabilityEvent } from './responder-event';
 import { buildTouchPayload } from './touch-payload';
 import {
@@ -116,7 +116,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
  * responders that decline the touch pass it on to their ancestors. A `TextInput` always keeps the
  * touch, even without `onPress`. `pointerEvents` moves the touch to the nearest ancestor it doesn't
  * block. Nothing is called when `display: none` hides the element. See `getTouchPath()`,
- * `findResponder()` and `dispatchPressabilityEvent()`.
+ * `findTouchResponder()` and `dispatchPressabilityEvent()`.
  *
  * Only `onPress` is called. Use `userEvent.press()` for `onPressIn`, `onPressOut` and timing.
  *
@@ -248,14 +248,14 @@ async function firePressabilityEvent(
     return;
   }
 
-  const pressResponder = findPressResponder(instance);
-  const { path, responder, responderKind } = pressResponder;
+  const path = getTouchPath(instance);
+  const responder = findTouchResponder(path);
   const { calledEventTypes } =
     responder != null
-      ? await dispatchPressabilityEvent(responder, [eventType], event, path[0])
+      ? await dispatchPressabilityEvent(responder.instance, [eventType], event, path[0])
       : { calledEventTypes: [] };
   // A responder without Pressability, like `PanResponder`, handles the touch its own way.
-  if (responderKind !== 'custom' && calledEventTypes.length === 0) {
-    warnAboutUnhandledPressabilityEvent(instance, eventType, pressResponder);
+  if (responder?.kind !== 'responderHandlers' && calledEventTypes.length === 0) {
+    warnAboutUnhandledPressabilityEvent(instance, eventType, responder?.instance ?? null);
   }
 }
