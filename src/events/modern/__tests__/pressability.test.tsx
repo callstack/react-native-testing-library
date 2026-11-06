@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { PanResponder, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import type { TestInstance } from 'test-renderer';
 
 import { render, screen } from '../../..';
@@ -8,7 +8,9 @@ import type { SyntheticEvent } from '../event';
 import { createEvent } from '../event';
 import type { PressabilityEventType } from '../event-types';
 import { PRESSABILITY_EVENT_TYPES } from '../event-types';
-import { dispatchPressabilityEvent, findResponder, getTouchPath } from '../pressability';
+import type { TouchResponder } from '../pressability';
+import { dispatchPressabilityEvent, findTouchResponder, getTouchPath } from '../pressability';
+import { getPressDiagnostics } from '../warnings';
 
 function createTouchEvent() {
   return createEvent('touchEnd', { nativeEvent: { pageX: 10 } });
@@ -21,9 +23,10 @@ async function touch(
   event: SyntheticEvent = createTouchEvent(),
 ) {
   const path = getTouchPath(instance);
-  const responder = findResponder(path);
+  const responder = findTouchResponder(path);
   return responder != null
-    ? (await dispatchPressabilityEvent(responder, [eventType], event, path[0])).length > 0
+    ? (await dispatchPressabilityEvent(responder.instance, [eventType], event, path[0]))
+        .calledEventTypes.length > 0
     : false;
 }
 
@@ -160,12 +163,12 @@ test('does not call callbacks of Text disabled during the touch', async () => {
   }
   await render(<DisabledOnPressIn />);
   const path = getTouchPath(screen.getByText('Press me'));
-  const responder = findResponder(path) as TestInstance;
+  const responder = (findTouchResponder(path) as TouchResponder).instance;
 
   await dispatchPressabilityEvent(responder, ['pressIn'], createTouchEvent(), path[0]);
   const result = await dispatchPressabilityEvent(responder, ['press'], createTouchEvent(), path[0]);
 
-  expect(result).toEqual([]);
+  expect(result).toEqual({ calledEventTypes: [] });
   expect(onPress).not.toHaveBeenCalled();
 });
 
@@ -178,4 +181,79 @@ test('returns whether the responder had the callback', async () => {
 
   expect(await touch(screen.getByText('Press me'), 'press')).toBe(true);
   expect(await touch(screen.getByText('Press me'), 'longPress')).toBe(false);
+});
+
+test('findTouchResponder classifies a responder without Pressability as responderHandlers', async () => {
+  const panResponder = PanResponder.create({ onStartShouldSetPanResponder: () => true });
+  await render(
+    <View testID="pan" {...panResponder.panHandlers}>
+      <Text>Press me</Text>
+    </View>,
+  );
+
+  expect(findTouchResponder(getTouchPath(screen.getByText('Press me')))).toEqual({
+    instance: screen.getByTestId('pan'),
+    kind: 'responderHandlers',
+  });
+});
+
+test('findTouchResponder classifies Pressable as pressabilityConfig and mocked hosts as pressHandlers', async () => {
+  await render(
+    <Pressable testID="pressable" onPress={jest.fn()}>
+      <Text>Press me</Text>
+      <Text onPress={jest.fn()}>Press text</Text>
+    </Pressable>,
+  );
+
+  expect(findTouchResponder(getTouchPath(screen.getByText('Press me')))).toEqual({
+    instance: screen.getByTestId('pressable'),
+    kind: 'pressabilityConfig',
+  });
+  expect(findTouchResponder(getTouchPath(screen.getByText('Press text')))).toEqual({
+    instance: screen.getByText('Press text'),
+    kind: 'pressHandlers',
+  });
+});
+
+test('getPressDiagnostics returns the display: none blocker and the skipped elements', async () => {
+  await render(
+    <View testID="hider" style={{ display: 'none' }}>
+      <Pressable testID="pressable" onPress={jest.fn()}>
+        <Text>Press me</Text>
+      </Pressable>
+    </View>,
+  );
+
+  const options = { includeHiddenElements: true };
+
+  expect(getPressDiagnostics(screen.getByText('Press me', options), null)).toEqual({
+    displayNoneBlocker: screen.getByTestId('hider', options),
+    skippedTargets: [screen.getByTestId('pressable', options)],
+  });
+});
+
+test('getPressDiagnostics skips the pressed element when no element can receive the touch', async () => {
+  await render(
+    <View pointerEvents="none">
+      <Text>Press me</Text>
+    </View>,
+  );
+  const text = screen.getByText('Press me');
+
+  expect(getPressDiagnostics(text, null)).toEqual({
+    displayNoneBlocker: null,
+    skippedTargets: [text],
+  });
+});
+
+test('getPressDiagnostics returns nothing for a press that reaches the responder', async () => {
+  await render(
+    <Pressable testID="pressable" onPress={jest.fn()}>
+      <Text>Press me</Text>
+    </Pressable>,
+  );
+
+  expect(
+    getPressDiagnostics(screen.getByText('Press me'), screen.getByTestId('pressable')),
+  ).toEqual({ displayNoneBlocker: null, skippedTargets: [] });
 });
