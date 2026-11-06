@@ -62,8 +62,10 @@ describe('dispatched events', () => {
 
   test('does not warn when only a capture handler is called', async () => {
     const onTouchStartCapture = jest.fn();
+    // `onTouchStartCapture` is missing from `ViewProps` in RN 0.86 and older
+    const captureProps: object = { onTouchStartCapture };
     await render(
-      <View onTouchStartCapture={onTouchStartCapture}>
+      <View {...captureProps}>
         <View testID="child" />
       </View>,
     );
