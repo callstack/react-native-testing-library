@@ -4,7 +4,7 @@ import { findClosestInstance } from '../../helpers/component-tree';
 import { isHostSwitch, isHostTextInput } from '../../helpers/host-component-names';
 import { isEditableTextInput } from '../../helpers/text-input';
 import type { CreateEventInit } from './event';
-import { getTouchPath } from './pressability';
+import { getDisplayNoneBlocker, getTouchPath } from './pressability';
 
 /**
  * Native touch and pointer events, which a device emits from the view its hit testing finds, as
@@ -42,8 +42,20 @@ const TEXT_EDITING_EVENT_TYPES = new Set([
   'submitEditing',
 ]);
 
+/** Why `getEmittingTarget()` dropped an event. */
+export type DroppedEventReason =
+  | { kind: 'displayNone'; displayNoneBlocker: TestInstance }
+  | { kind: 'pointerEvents' }
+  | { kind: 'nonEditable'; textInput: TestInstance }
+  | { kind: 'disabledSwitch' };
+
+/** The element that emits the event, or why no element would emit it. */
+export type EmittingTargetResult =
+  | { target: TestInstance; droppedReason?: never }
+  | { target: null; droppedReason: DroppedEventReason };
+
 /**
- * The element a device would emit the event from, or `null` when no element would emit it:
+ * The element a device would emit the event from, or the reason no element would emit it:
  *
  * - Touch and pointer events: the hit target, as for `press` (`getTouchPath()`). `pointerEvents`
  *   moves them to the nearest ancestor it doesn't block, and drops them when it blocks every
@@ -63,25 +75,39 @@ export function getEmittingTarget(
   target: TestInstance,
   eventType: string,
   init: CreateEventInit,
-): TestInstance | null {
+): EmittingTargetResult {
   if (init.dispatch != null) {
-    return target;
+    return { target };
   }
 
   if (HIT_TESTED_EVENT_TYPES.has(eventType)) {
-    return getTouchPath(target)[0] ?? null;
+    const hitTarget = getTouchPath(target)[0];
+    if (hitTarget != null) {
+      return { target: hitTarget };
+    }
+
+    const displayNoneBlocker = getDisplayNoneBlocker(target);
+    return {
+      target: null,
+      droppedReason:
+        displayNoneBlocker != null
+          ? { kind: 'displayNone', displayNoneBlocker }
+          : { kind: 'pointerEvents' },
+    };
   }
 
   if (TEXT_EDITING_EVENT_TYPES.has(eventType)) {
     const textInput = findClosestInstance(target, isHostTextInput);
     if (textInput != null) {
-      return isEditableTextInput(textInput) ? textInput : null;
+      return isEditableTextInput(textInput)
+        ? { target: textInput }
+        : { target: null, droppedReason: { kind: 'nonEditable', textInput } };
     }
   }
 
   if (eventType === 'change' && isHostSwitch(target) && target.props.disabled === true) {
-    return null;
+    return { target: null, droppedReason: { kind: 'disabledSwitch' } };
   }
 
-  return target;
+  return { target };
 }

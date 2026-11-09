@@ -182,14 +182,16 @@ describe('afterTargetHandler', () => {
     const calls: Call[] = [];
     await renderNestedViews(['onFocus', 'onFocusCapture'], calls);
     const target = screen.getByTestId('target');
-    const afterTargetHandler = jest.fn((_target: TestInstance, event: SyntheticEvent) => {
-      calls.push({
-        prop: 'afterTargetHandler',
-        currentTarget: event.currentTarget?.props.testID,
-        target: event.target?.props.testID,
-        eventPhase: event.eventPhase,
-      });
-    });
+    const afterTargetHandler = jest.fn(
+      (_target: TestInstance, event: SyntheticEvent): undefined => {
+        calls.push({
+          prop: 'afterTargetHandler',
+          currentTarget: event.currentTarget?.props.testID,
+          target: event.target?.props.testID,
+          eventPhase: event.eventPhase,
+        });
+      },
+    );
 
     await dispatchEvent(target, createEvent('focus'), { afterTargetHandler });
 
@@ -220,6 +222,21 @@ describe('afterTargetHandler', () => {
     });
 
     expect(afterTargetHandler).toHaveBeenCalledTimes(1);
+  });
+
+  test('counts as a called handler when it returns true', async () => {
+    await render(<View testID="target" />);
+    const target = screen.getByTestId('target');
+
+    const withCall = await dispatchEvent(target, createEvent('layout'), {
+      afterTargetHandler: () => true,
+    });
+    const withoutCall = await dispatchEvent(target, createEvent('layout'), {
+      afterTargetHandler: () => false,
+    });
+
+    expect(withCall).toBe(true);
+    expect(withoutCall).toBe(false);
   });
 
   test('is skipped when a capture handler stops propagation', async () => {

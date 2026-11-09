@@ -1,0 +1,173 @@
+import type { TestInstance } from 'test-renderer';
+
+import { getConfig } from '../../config';
+import { getEventHandlerName } from '../shared/handler';
+import type { EventWarning } from '../shared/warnings';
+import {
+  formatDisabledTargets,
+  getPointerEventsBlockedTargets,
+  getPressBlockedReason,
+  logEventWarning,
+} from '../shared/warnings';
+import type { DroppedEventReason } from './emitting-target';
+import type { EventTypeConfig, PressabilityEventType } from './event-types';
+import { getPressDiagnostics } from './pressability';
+
+/**
+ * Warns when `getEmittingTarget()` dropped the event, as the element can't emit it: hidden by
+ * `display: none`, blocked by `pointerEvents`, a non-editable `TextInput` or a disabled `Switch`.
+ *
+ * @param reportedEventType the event type the user fired, e.g. `changeText` for a `change` event.
+ */
+export function warnAboutDroppedEvent(
+  instance: TestInstance,
+  eventType: string,
+  reason: DroppedEventReason,
+  reportedEventType: string = eventType,
+) {
+  if (!getConfig().eventDiagnostics) {
+    return;
+  }
+
+  const warning = getDroppedEventWarning(instance, reason, reportedEventType);
+  if (warning != null) {
+    logEventWarning(warning);
+  }
+}
+
+/**
+ * Warns when a dispatched event called no handler and didn't update native state.
+ *
+ * @param target the element that emitted the event.
+ * @param handlerName the handler to name, e.g. `onChangeText` for `fireEvent.changeText()`.
+ * Defaults to the event type's bubbling handler.
+ */
+export function warnAboutUnhandledEvent(
+  target: TestInstance,
+  typeConfig: EventTypeConfig,
+  handlerName: string = typeConfig.handlerName,
+) {
+  if (!getConfig().eventDiagnostics) {
+    return;
+  }
+
+  logEventWarning({
+    message:
+      typeConfig.kind === 'direct'
+        ? `No "${handlerName}" handler found on the element.`
+        : `No "${handlerName}" handler found on the element or its ancestors.`,
+    elements: [target],
+  });
+}
+
+/**
+ * Warns when a Pressability event (`press`, `pressIn`, `pressOut`, `longPress`) wasn't handled,
+ * per `dispatchPressabilityEvent()`. Doesn't warn when a responder declines the touch on purpose.
+ *
+ * @param responder the touch responder from `findTouchResponder()`, or `null` when none claimed the
+ * touch.
+ */
+export function warnAboutUnhandledPressabilityEvent(
+  instance: TestInstance,
+  eventType: PressabilityEventType,
+  responder: TestInstance | null,
+) {
+  if (!getConfig().eventDiagnostics) {
+    return;
+  }
+
+  const warning = getUnhandledPressabilityEventWarning(instance, eventType, responder);
+  if (warning != null) {
+    logEventWarning(warning);
+  }
+}
+
+function getDroppedEventWarning(
+  instance: TestInstance,
+  reason: DroppedEventReason,
+  reportedEventType: string,
+): EventWarning | null {
+  switch (reason.kind) {
+    case 'displayNone':
+      return getDisplayNoneWarning(instance, reportedEventType, reason.displayNoneBlocker);
+    case 'pointerEvents':
+      return getPointerEventsWarning([instance], reportedEventType);
+    case 'nonEditable':
+      return getDisabledWarning([reason.textInput], reportedEventType);
+    case 'disabledSwitch':
+      return getDisabledWarning([instance], reportedEventType);
+  }
+}
+
+function getUnhandledPressabilityEventWarning(
+  instance: TestInstance,
+  eventType: PressabilityEventType,
+  responder: TestInstance | null,
+): EventWarning | null {
+  const { displayNoneBlocker, skippedTargets } = getPressDiagnostics(instance, responder);
+  const blockedReason = getPressBlockedReason(skippedTargets, displayNoneBlocker);
+  switch (blockedReason?.kind) {
+    case 'displayNone':
+      return getDisplayNoneWarning(instance, eventType, blockedReason.displayNoneBlocker);
+    case 'pointerEvents':
+      return getPointerEventsWarningMessage(blockedReason, eventType);
+    case 'disabled':
+      return getDisabledWarning(blockedReason.elements, eventType);
+  }
+
+  const handlerName = getEventHandlerName(eventType);
+  if (responder != null) {
+    return {
+      message: `No "${handlerName}" handler found on the touch responder.`,
+      elements: [responder],
+    };
+  }
+
+  // A responder declining the touch is a deliberate way of blocking it, so it doesn't warn.
+  if (skippedTargets.length > 0) {
+    return null;
+  }
+
+  return {
+    message: `No "${handlerName}" handler found on the element or its ancestors.`,
+    elements: [instance],
+  };
+}
+
+function getDisplayNoneWarning(
+  instance: TestInstance,
+  eventType: string,
+  displayNoneBlocker: TestInstance,
+): EventWarning {
+  return {
+    message: `Cannot fire the "${eventType}" event on an element hidden by display: none.`,
+    elements: [instance],
+    displayNoneBlockers: [displayNoneBlocker],
+  };
+}
+
+function getPointerEventsWarning(targets: TestInstance[], eventType: string): EventWarning | null {
+  const blocked = getPointerEventsBlockedTargets(targets);
+  return blocked != null ? getPointerEventsWarningMessage(blocked, eventType) : null;
+}
+
+function getPointerEventsWarningMessage(
+  blocked: Pick<EventWarning, 'elements' | 'pointerEventsBlockers'>,
+  eventType: string,
+): EventWarning {
+  return {
+    message:
+      blocked.elements.length === 1
+        ? `Cannot fire the "${eventType}" event on an element blocked by pointerEvents.`
+        : `Cannot fire the "${eventType}" event on elements blocked by pointerEvents.`,
+    elements: blocked.elements,
+    pointerEventsBlockers: blocked.pointerEventsBlockers,
+  };
+}
+
+function getDisabledWarning(targets: TestInstance[], eventType: string): EventWarning {
+  return {
+    message: `Cannot fire the "${eventType}" event on ${formatDisabledTargets(targets)}.`,
+    elements: targets,
+  };
+}

@@ -29,3 +29,6 @@ codemods/**/dist/
 .agents/skills/
 .claude/skills/
 .cursor/skills/
+
+# Local PR description draft (see CLAUDE.md)
+PR.txt

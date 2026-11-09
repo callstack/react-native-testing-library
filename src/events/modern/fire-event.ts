@@ -3,7 +3,7 @@ import type { TestInstance } from 'test-renderer';
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { ensureInstanceForEvent } from '../shared/assertions';
 import { isActiveTouchEventType, isScrollEventType, isTouchEventType } from '../shared/event-types';
-import { getEventHandlerByEventType } from '../shared/handler';
+import { getEventHandlerByEventType, getEventHandlerName } from '../shared/handler';
 import { mergeEventProps } from '../shared/merge';
 import {
   getNativeStateEventProps,
@@ -20,13 +20,18 @@ import type { DispatchOptions } from './dispatch';
 import { dispatchEvent } from './dispatch';
 import { getEmittingTarget } from './emitting-target';
 import type { CreateEventInit, NativeEventPayload } from './event';
-import { createEvent } from './event';
+import { createEvent, getEventInternals } from './event';
 import type { PressabilityEventType } from './event-types';
 import { isPressabilityEventType } from './event-types';
 import { ensureEventType, validateChangeTextArgs, validateEventInit } from './fire-event-utils';
-import { dispatchPressabilityEvent, findResponder, getTouchPath } from './pressability';
+import { dispatchPressabilityEvent, findTouchResponder, getTouchPath } from './pressability';
 import { createPressabilityEvent } from './responder-event';
 import { buildTouchPayload } from './touch-payload';
+import {
+  warnAboutDroppedEvent,
+  warnAboutUnhandledEvent,
+  warnAboutUnhandledPressabilityEvent,
+} from './warnings';
 
 /**
  * Event object passed to modern `fireEvent`. Handlers receive a `SyntheticEvent` from
@@ -92,13 +97,16 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
 
   const selection = { start: text.length, end: text.length };
   const payload = buildTextChangeNativeEvent(text, selection);
-  const dispatchOptions: DispatchOptions = {
+  const options: FireEventInternalOptions = {
     afterTargetHandler: (target) => {
-      getEventHandlerByEventType(target.props, 'changeText')?.(text);
+      const onChangeText = getEventHandlerByEventType(target.props, 'changeText');
+      onChangeText?.(text);
+      return onChangeText != null;
     },
+    reportedEventType: 'changeText',
   };
 
-  await fireEventInternal(instance, 'change', { nativeEvent: payload }, dispatchOptions);
+  await fireEventInternal(instance, 'change', { nativeEvent: payload }, options);
 };
 
 /**
@@ -107,7 +115,8 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
  * their own `onPress` (mocked `Text`, `testOnly_onPress`) directly. Disabled elements and
  * responders that decline the touch pass it on to their ancestors. A `TextInput` always keeps the
  * touch, even without `onPress`. `pointerEvents` moves the touch to the nearest ancestor it doesn't
- * block. Nothing is called when `display: none` hides the element. See `getTouchPath()`, `findResponder()` and `dispatchPressabilityEvent()`.
+ * block. Nothing is called when `display: none` hides the element. See `getTouchPath()`,
+ * `findTouchResponder()` and `dispatchPressabilityEvent()`.
  *
  * Only `onPress` is called. Use `userEvent.press()` for `onPressIn`, `onPressOut` and timing.
  *
@@ -148,20 +157,33 @@ fireEvent.layout = async (
   await fireEventInternal(instance, 'layout', { nativeEvent: buildLayoutNativeEvent(layout) });
 };
 
-/** Expects an event type without the `on*` prefix, that React Native knows or that has `dispatch`. */
+type FireEventInternalOptions = DispatchOptions & {
+  /**
+   * The event type the user fired, for diagnostics, e.g. `changeText` for a `change` event. Its
+   * handler (`onChangeText`) is named when no handler is called.
+   */
+  reportedEventType?: string;
+};
+
+/**
+ * Expects an event type without the `on*` prefix, that React Native knows or that has `dispatch`.
+ * With `eventDiagnostics`, warns when the event is dropped, or calls no handler and updates no
+ * native state.
+ */
 async function fireEventInternal(
   instance: TestInstance,
   eventType: string,
   init: CreateEventInit,
-  dispatchOptions?: DispatchOptions,
+  { reportedEventType, ...dispatchOptions }: FireEventInternalOptions = {},
 ): Promise<void> {
   if (!isInstanceMounted(instance)) {
     return;
   }
 
   // Before native state, so a dropped `change` leaves it alone.
-  const target = getEmittingTarget(instance, eventType, init);
+  const { target, droppedReason } = getEmittingTarget(instance, eventType, init);
   if (target == null) {
+    warnAboutDroppedEvent(instance, eventType, droppedReason, reportedEventType);
     return;
   }
 
@@ -169,8 +191,13 @@ async function fireEventInternal(
   const event = createEvent(eventType, { ...init, nativeEvent });
 
   // Before the dispatch, as a device updates its native views before emitting the event.
-  updateNativeStateFromEvent(target, eventType, event);
-  await dispatchEvent(target, event, dispatchOptions);
+  const hasUpdatedNativeState = updateNativeStateFromEvent(target, eventType, event);
+  const hasCalledHandler = await dispatchEvent(target, event, dispatchOptions);
+  if (!hasCalledHandler && !hasUpdatedNativeState) {
+    const handlerName =
+      reportedEventType != null ? getEventHandlerName(reportedEventType) : undefined;
+    warnAboutUnhandledEvent(target, getEventInternals(event).typeConfig, handlerName);
+  }
 }
 
 /**
@@ -222,8 +249,13 @@ async function firePressabilityEvent(
   }
 
   const path = getTouchPath(instance);
-  const responder = findResponder(path);
-  if (responder != null) {
-    await dispatchPressabilityEvent(responder, [eventType], event, path[0]);
+  const responder = findTouchResponder(path);
+  const { calledEventTypes } =
+    responder != null
+      ? await dispatchPressabilityEvent(responder.instance, [eventType], event, path[0])
+      : { calledEventTypes: [] };
+  // A responder without Pressability, like `PanResponder`, handles the touch its own way.
+  if (responder?.kind !== 'responderHandlers' && calledEventTypes.length === 0) {
+    warnAboutUnhandledPressabilityEvent(instance, eventType, responder?.instance ?? null);
   }
 }
