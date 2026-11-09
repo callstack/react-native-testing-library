@@ -7,10 +7,10 @@ import {
   dispatchPressabilityEvent,
   findTouchResponder,
   getPressabilityCallback,
+  getPressDiagnostics,
   getTouchPath,
 } from '../../events/modern/pressability';
 import { createPressabilityEvent } from '../../events/modern/responder-event';
-import { getPressDiagnostics } from '../../events/modern/warnings';
 import type { UserEventConfig } from '../setup';
 import type { Interaction } from '../utils';
 import { wait } from '../utils';

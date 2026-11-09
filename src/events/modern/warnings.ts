@@ -1,7 +1,7 @@
 import type { TestInstance } from 'test-renderer';
 
 import { getConfig } from '../../config';
-import { getEventHandlerName, hasPressEventHandler } from '../shared/handler';
+import { getEventHandlerName } from '../shared/handler';
 import type { EventWarning } from '../shared/warnings';
 import {
   formatDisabledTargets,
@@ -11,7 +11,7 @@ import {
 } from '../shared/warnings';
 import type { DroppedEventReason } from './emitting-target';
 import type { EventTypeConfig, PressabilityEventType } from './event-types';
-import { getDisplayNoneBlocker, getTouchPath } from './pressability';
+import { getPressDiagnostics } from './pressability';
 
 /**
  * Warns when `getEmittingTarget()` dropped the event, as the element can't emit it: hidden by
@@ -80,48 +80,6 @@ export function warnAboutUnhandledPressabilityEvent(
   if (warning != null) {
     logEventWarning(warning);
   }
-}
-
-export type PressDiagnostics = {
-  /** The element whose `display: none` hides the pressed element, from `getDisplayNoneBlocker()`. */
-  displayNoneBlocker: TestInstance | null;
-  /**
-   * Elements from the pressed element up to the responder (or the root) that could handle the
-   * press (a Pressability callback or `onStartShouldSetResponder`) but didn't get it, as they are
-   * disabled, decline the touch or are blocked by `pointerEvents`. Nearest first. When hit testing
-   * finds no element and none of them could handle the press, just the pressed element.
-   */
-  skippedTargets: TestInstance[];
-};
-
-/**
- * What kept a press on the element from reaching a handler, for warnings: the `display: none`
- * blocker and the skipped elements. Only for `eventDiagnostics`, so it isn't on the press path.
- *
- * @param responder the touch responder from `findTouchResponder()`, or `null` when none claimed the
- * touch.
- */
-export function getPressDiagnostics(
-  instance: TestInstance,
-  responder: TestInstance | null,
-): PressDiagnostics {
-  const displayNoneBlocker = getDisplayNoneBlocker(instance);
-  const skippedTargets: TestInstance[] = [];
-  let current: TestInstance | null = instance;
-  while (current != null && current !== responder) {
-    if (hasPressEventHandler(current.props) || current.props.onStartShouldSetResponder) {
-      skippedTargets.push(current);
-    }
-
-    current = current.parent;
-  }
-
-  // No element can receive the touch, so the pressed element is skipped too.
-  if (skippedTargets.length === 0 && getTouchPath(instance).length === 0) {
-    skippedTargets.push(instance);
-  }
-
-  return { displayNoneBlocker, skippedTargets };
 }
 
 function getDroppedEventWarning(

@@ -9,8 +9,12 @@ import { createEvent } from '../event';
 import type { PressabilityEventType } from '../event-types';
 import { PRESSABILITY_EVENT_TYPES } from '../event-types';
 import type { TouchResponder } from '../pressability';
-import { dispatchPressabilityEvent, findTouchResponder, getTouchPath } from '../pressability';
-import { getPressDiagnostics } from '../warnings';
+import {
+  dispatchPressabilityEvent,
+  findTouchResponder,
+  getPressDiagnostics,
+  getTouchPath,
+} from '../pressability';
 
 function createTouchEvent() {
   return createEvent('touchEnd', { nativeEvent: { pageX: 10 } });
