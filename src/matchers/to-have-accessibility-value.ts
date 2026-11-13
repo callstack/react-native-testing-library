@@ -5,10 +5,11 @@ import { computeAriaValue } from '../helpers/accessibility';
 import type { AccessibilityValueMatcher } from '../helpers/matchers/match-accessibility-value';
 import { matchAccessibilityValue } from '../helpers/matchers/match-accessibility-value';
 import { removeUndefinedKeys } from '../helpers/object';
+import type { MatcherContext } from './utils';
 import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveAccessibilityValue(
-  this: jest.MatcherContext,
+  this: MatcherContext,
   instance: TestInstance,
   expectedValue: AccessibilityValueMatcher,
 ) {

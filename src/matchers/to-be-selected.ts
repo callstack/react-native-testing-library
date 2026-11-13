@@ -4,9 +4,10 @@ import type { TestInstance } from 'test-renderer';
 
 import { computeAriaSelected } from '../helpers/accessibility';
 import { formatElement } from '../helpers/format-element';
+import type { MatcherContext } from './utils';
 import { checkHostElement } from './utils';
 
-export function toBeSelected(this: jest.MatcherContext, instance: TestInstance) {
+export function toBeSelected(this: MatcherContext, instance: TestInstance) {
   checkHostElement(instance, toBeSelected, this);
 
   return {

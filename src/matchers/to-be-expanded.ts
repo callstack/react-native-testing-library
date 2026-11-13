@@ -4,9 +4,10 @@ import type { TestInstance } from 'test-renderer';
 
 import { computeAriaExpanded } from '../helpers/accessibility';
 import { formatElement } from '../helpers/format-element';
+import type { MatcherContext } from './utils';
 import { checkHostElement } from './utils';
 
-export function toBeExpanded(this: jest.MatcherContext, instance: TestInstance) {
+export function toBeExpanded(this: MatcherContext, instance: TestInstance) {
   checkHostElement(instance, toBeExpanded, this);
 
   return {
@@ -23,7 +24,7 @@ export function toBeExpanded(this: jest.MatcherContext, instance: TestInstance) 
   };
 }
 
-export function toBeCollapsed(this: jest.MatcherContext, instance: TestInstance) {
+export function toBeCollapsed(this: MatcherContext, instance: TestInstance) {
   checkHostElement(instance, toBeCollapsed, this);
 
   return {
