@@ -26,6 +26,9 @@ with v14.
   a child with `onStartShouldSetResponder` returning `false` stopped these events from reaching
   the `onTouchStart` of its ancestors. Responder-driven events like `press` still respect the
   responder.
+- `fireEvent` calls the handler of a composite component from the latest render. Before, when
+  React skipped the host element on a re-render, for example because it was memoized, every other
+  event called the handler from an earlier render.
 
 ## 14.1.0
 
