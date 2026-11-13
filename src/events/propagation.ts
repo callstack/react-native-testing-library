@@ -1,5 +1,6 @@
 import type { Fiber, TestInstance } from 'test-renderer';
 
+import { getCurrentFiber } from '../helpers/fiber';
 import {
   isHostImage,
   isHostModal,
@@ -154,12 +155,20 @@ function isDirectEvent(instance: TestInstance, eventType: string) {
 }
 
 function findEventHandlerFromFiber(fiber: Fiber | null, eventType: string): EventHandler | null {
-  // Container fibers have memoizedProps set to null
-  if (!fiber?.memoizedProps) {
+  if (fiber === null) {
     return null;
   }
 
-  const handler = getEventHandlerFromProps(fiber.memoizedProps, eventType, {
+  // `unstable_fiber` and `return` can lead to the copy of a fiber from an earlier commit, whose
+  // props hold the handlers of an earlier render.
+  const currentFiber = getCurrentFiber(fiber);
+
+  // Container fibers have memoizedProps set to null
+  if (!currentFiber.memoizedProps) {
+    return null;
+  }
+
+  const handler = getEventHandlerFromProps(currentFiber.memoizedProps, eventType, {
     loose: true,
   });
   if (handler) {
@@ -167,9 +176,9 @@ function findEventHandlerFromFiber(fiber: Fiber | null, eventType: string): Even
   }
 
   // No parent fiber or we reached another host element
-  if (fiber.return === null || typeof fiber.return.type === 'string') {
+  if (currentFiber.return === null || typeof currentFiber.return.type === 'string') {
     return null;
   }
 
-  return findEventHandlerFromFiber(fiber.return, eventType);
+  return findEventHandlerFromFiber(currentFiber.return, eventType);
 }
