@@ -3,17 +3,14 @@ import type { ImageStyle, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { StyleSheet } from 'react-native';
 import type { TestInstance } from 'test-renderer';
 
+import type { MatcherContext } from './utils';
 import { checkHostElement, formatMessage } from './utils';
 
 export type Style = ViewStyle | TextStyle | ImageStyle;
 
 type StyleLike = Record<string, unknown>;
 
-export function toHaveStyle(
-  this: jest.MatcherContext,
-  instance: TestInstance,
-  style: StyleProp<Style>,
-) {
+export function toHaveStyle(this: MatcherContext, instance: TestInstance, style: StyleProp<Style>) {
   checkHostElement(instance, toHaveStyle, this);
 
   const expected = (StyleSheet.flatten(style) as StyleLike) ?? {};

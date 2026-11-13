@@ -6,9 +6,10 @@ import type { TestInstance } from 'test-renderer';
 import { isHiddenFromAccessibility } from '../helpers/accessibility';
 import { formatElement } from '../helpers/format-element';
 import { isHostModal } from '../helpers/host-component-names';
+import type { MatcherContext } from './utils';
 import { checkHostElement } from './utils';
 
-export function toBeVisible(this: jest.MatcherContext, instance: TestInstance) {
+export function toBeVisible(this: MatcherContext, instance: TestInstance) {
   if (instance !== null || !this.isNot) {
     checkHostElement(instance, toBeVisible, this);
   }

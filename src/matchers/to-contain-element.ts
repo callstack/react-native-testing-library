@@ -3,10 +3,11 @@ import redent from 'redent';
 import type { TestInstance } from 'test-renderer';
 
 import { formatElement } from '../helpers/format-element';
+import type { MatcherContext } from './utils';
 import { checkHostElement } from './utils';
 
 export function toContainElement(
-  this: jest.MatcherContext,
+  this: MatcherContext,
   container: TestInstance,
   instance: TestInstance | null,
 ) {

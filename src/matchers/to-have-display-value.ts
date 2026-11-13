@@ -6,10 +6,11 @@ import { isHostTextInput } from '../helpers/host-component-names';
 import { getTextInputValue } from '../helpers/text-input';
 import type { TextMatch, TextMatchOptions } from '../matches';
 import { matches } from '../matches';
+import type { MatcherContext } from './utils';
 import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveDisplayValue(
-  this: jest.MatcherContext,
+  this: MatcherContext,
   instance: TestInstance,
   expectedValue: TextMatch,
   options?: TextMatchOptions,
