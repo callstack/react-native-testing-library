@@ -24,7 +24,8 @@ import type { BubblingEventTypeConfig, DirectEventTypeConfig } from './event-typ
  * Not implemented yet: responder negotiation, which React Native runs first for touch, scroll and
  * selection change events.
  *
- * @returns `true` if a handler was called. Check `event.defaultPrevented` for `preventDefault()`.
+ * @returns `true` if a handler was called, including by `afterTargetHandler`. Check
+ * `event.defaultPrevented` for `preventDefault()`.
  */
 export async function dispatchEvent(
   target: TestInstance,
@@ -63,9 +64,10 @@ export type DispatchOptions = {
    * Runs at the target, right after the target's own handler, like a composite component wrapping
    * the host prop: `TextInput` passes `onChange={_onChange}`, which calls `props.onChange(event)`,
    * then `props.onChangeText(text)`. Skipped when propagation stopped before the target, or when
-   * the target's handler threw. Runs when the target has no handler.
+   * the target's handler threw. Runs when the target has no handler. Returns `true` when it
+   * called a handler, which counts for the result of `dispatchEvent()`.
    */
-  afterTargetHandler?: (target: TestInstance, event: SyntheticEvent) => void;
+  afterTargetHandler?: (target: TestInstance, event: SyntheticEvent) => boolean | undefined;
 };
 
 /** Clears the event's internals, as the event can still be read after the dispatch. */
@@ -172,7 +174,9 @@ function callHandler(
     }
 
     // In the same `try`, as a component's wrapper doesn't reach its own code after the prop throws.
-    afterHandler?.(node, event);
+    if (afterHandler?.(node, event) === true) {
+      state.hasCalledHandler = true;
+    }
   } catch (error) {
     // Keep dispatching, as React Native (`handleListenerError()` in `EventTarget.js`) and DOM do.
     if (state.firstError == null) {

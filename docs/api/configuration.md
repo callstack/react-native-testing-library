@@ -42,14 +42,17 @@ This option is also available as `defaultHidden` alias for compatibility with [R
 
 _Added in v14.1.0_
 
-Logs a warning when `fireEvent` or `userEvent` doesn't call any handler, so a test doesn't silently do nothing. Defaults to `false`.
+Logs a warning when `fireEvent` or `userEvent` doesn't call any handler, so a test doesn't silently do nothing. Defaults to `false`. It works in both the legacy and the [modern](#eventsystem-option) event system.
 
 A warning is logged in these cases:
 
+- The element is hidden by `display: 'none'`, on itself or an ancestor (modern event system only, for touch and pointer events, `press` and `userEvent.press()`/`longPress()`). The warning shows the element that sets `display: 'none'`. This takes precedence over the other warnings.
 - The handler is on a disabled element, e.g. a `Pressable` with `disabled={true}`.
 - The element is a non-editable `TextInput` (`editable={false}`). It blocks most events, including `changeText`, `focus`, `blur`, `press` and `submitEditing`, also when the handler is on one of its ancestors. The warning shows the `TextInput`.
 - The element is blocked by `pointerEvents`, e.g. it is inside a `View` with `pointerEvents="none"`. The warning shows the element that sets `pointerEvents`. This takes precedence over the disabled warning, because the event wouldn't reach the element even if it were enabled.
 - Neither the element nor any of its ancestors has a handler for the event. For direct events like `layout`, which don't bubble, only the element itself is checked.
+- The element is a disabled `Switch` and the event is `change` (modern event system only).
+- The touch responder has no callback for the fired press event, e.g. `fireEvent.press` on a `Pressable` with only `onLongPress` (modern event system only). No warning is logged when the responder handles touches without Pressability, like a `PanResponder`, or when a responder declines the touch.
 
 A `userEvent` interaction, like `press()` or `type()`, dispatches several events. It warns only when none of them called a handler. For example, `longPress()` on an element that has only `onPress` warns, because `longPress()` doesn't dispatch a `press` event.
 

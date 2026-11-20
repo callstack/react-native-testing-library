@@ -1,15 +1,16 @@
 import type { TestInstance } from 'test-renderer';
 
+import { getConfig } from '../../config';
 import type { SyntheticEvent } from '../../events/modern/event';
 import type { PressabilityEventType } from '../../events/modern/event-types';
 import {
   dispatchPressabilityEvent,
-  findResponder,
+  findTouchResponder,
   getPressabilityCallback,
+  getPressDiagnostics,
   getTouchPath,
 } from '../../events/modern/pressability';
 import { createPressabilityEvent } from '../../events/modern/responder-event';
-import { hasPressEventHandler } from '../../events/shared/handler';
 import type { UserEventConfig } from '../setup';
 import type { Interaction } from '../utils';
 import { wait } from '../utils';
@@ -49,14 +50,36 @@ export async function emitPressEvents(
   options: EmitPressOptions,
 ) {
   const path = getTouchPath(instance);
-  const responder = findPressTarget(interaction, instance, path);
-  if (responder == null) {
+  const touchResponder = findTouchResponder(path);
+  if (getConfig().eventDiagnostics) {
+    const { skippedTargets, displayNoneBlocker } = getPressDiagnostics(
+      instance,
+      touchResponder?.instance ?? null,
+    );
+    interaction.skippedTargets.push(...skippedTargets);
+    interaction.displayNoneBlocker = displayNoneBlocker;
+  }
+
+  if (touchResponder == null) {
     return;
+  }
+
+  const responder = touchResponder.instance;
+  // `press()` moves the target to the element that handles the press.
+  interaction.target = responder;
+  // A responder without Pressability, like `PanResponder`, handles the touch its own way.
+  if (touchResponder.kind === 'responderHandlers') {
+    interaction.hasCalledHandler = true;
   }
 
   /** Calls the callbacks in one `act()`, as React Native calls them from one responder event. */
   const dispatch = async (eventTypes: PressabilityEventType[], event: SyntheticEvent) => {
-    const calledEventTypes = await dispatchPressabilityEvent(responder, eventTypes, event, path[0]);
+    const { calledEventTypes } = await dispatchPressabilityEvent(
+      responder,
+      eventTypes,
+      event,
+      path[0],
+    );
     for (const eventType of eventTypes) {
       interaction.recordEvent(eventType, calledEventTypes.includes(eventType));
     }
@@ -77,34 +100,4 @@ export async function emitPressEvents(
     isLongPress && getPressabilityCallback(responder, 'longPress') != null;
   const pressEndEvent = createPressabilityEvent('pressOut');
   await dispatch(isPressCanceledByLongPress ? ['pressOut'] : ['pressOut', 'press'], pressEndEvent);
-}
-
-/**
- * Sets `interaction.target` to the touch responder, the element modern `fireEvent.press()` calls.
- * Elements between the pressed element and the responder that could handle the press, but are
- * disabled or block touches, are added to `interaction.skippedTargets`.
- *
- * @returns the responder, or `null` when no element receives the press.
- */
-function findPressTarget(
-  interaction: Interaction,
-  instance: TestInstance,
-  path: TestInstance[],
-): TestInstance | null {
-  const touchResponder = findResponder(path);
-
-  let current: TestInstance | null = instance;
-  while (current != null && current !== touchResponder) {
-    if (hasPressEventHandler(current.props) || current.props.onStartShouldSetResponder) {
-      interaction.skippedTargets.push(current);
-    }
-
-    current = current.parent;
-  }
-
-  if (touchResponder != null) {
-    interaction.target = touchResponder;
-  }
-
-  return touchResponder;
 }

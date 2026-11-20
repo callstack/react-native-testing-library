@@ -14,6 +14,8 @@ export class Interaction {
   readonly eventNames: string[] = [];
   /** Elements that could handle the interaction but did not accept it, nearest first. */
   readonly skippedTargets: TestInstance[] = [];
+  /** The element whose `display: none` hides the target, so no event reached it. */
+  displayNoneBlocker: TestInstance | null = null;
   hasCalledHandler = false;
   hasUpdatedNativeState = false;
 

@@ -109,6 +109,8 @@ Modern `fireEvent` doesn't call handlers for events a device wouldn't emit from 
 
 Events fired with `dispatch` skip these checks.
 
+With [`eventDiagnostics`](/docs/api/misc/config#eventdiagnostics-option) turned on, a dropped event logs a warning that names the reason, e.g. the element that sets `display: 'none'` or `pointerEvents`.
+
 #### Composite components
 
 Modern `fireEvent` calls only props of host elements, as React Native does. It doesn't call props of composite components, like your own `onInputChange`, or JavaScript callbacks with custom arguments, like `onContentSizeChange(width, height)` of `FlatList`. This is the change most likely to break existing tests. Use [`UNSAFE_invokeHandler`](/docs/api/events/fire-event#unsafe-invoke-handler) for these:

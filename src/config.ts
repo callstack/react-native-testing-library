@@ -16,7 +16,8 @@ export type Config = {
 
   /**
    * Warn when `fireEvent` or a `userEvent` interaction calls no handler, because the target
-   * is disabled, blocked by `pointerEvents`, or no element handles the event. Off by default.
+   * is disabled, blocked by `pointerEvents`, hidden by `display: none` (modern event system), or
+   * no element handles the event. Off by default.
    */
   eventDiagnostics: boolean;
 
