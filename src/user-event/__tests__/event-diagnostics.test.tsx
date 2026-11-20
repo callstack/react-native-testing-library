@@ -314,6 +314,26 @@ test('warns when the press is blocked by pointerEvents="none"', async () => {
   `);
 });
 
+test('warns when the press is blocked by pointerEvents on several elements', async () => {
+  await render(
+    <View pointerEvents="none">
+      <Pressable onPress={jest.fn()}>
+        <Pressable onPress={jest.fn()}>
+          <Text>Trigger</Text>
+        </Pressable>
+      </Pressable>
+    </View>,
+  );
+  const user = userEvent.setup();
+
+  await user.press(screen.getByText('Trigger'));
+
+  expect(warnSpy).toHaveBeenCalledTimes(1);
+  expect(warnSpy.mock.calls[0][0]).toMatch(
+    /^press\(\) interaction did not call any event handlers\. The elements are blocked by pointerEvents\./,
+  );
+});
+
 test('reports pointerEvents rather than disabled when both block the interaction', async () => {
   await render(
     <View testID="overlay" pointerEvents="none">

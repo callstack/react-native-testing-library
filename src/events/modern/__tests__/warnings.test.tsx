@@ -292,6 +292,14 @@ describe('dropped events', () => {
     `);
   });
 
+  test('does not warn when a touch event fired on the root container is dropped', async () => {
+    await render(<View onTouchStart={jest.fn()} />);
+
+    await fireEvent(screen.container, 'touchStart', emptyEvent);
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
   test('warns when a text editing event is fired on a non-editable TextInput', async () => {
     await render(<TextInput testID="input" editable={false} onFocus={jest.fn()} />);
 
@@ -518,6 +526,24 @@ describe('press', () => {
           testID="overlay"
         />"
     `);
+  });
+
+  test('warns when pointerEvents blocks several Pressables', async () => {
+    await render(
+      <View pointerEvents="none">
+        <Pressable onPress={jest.fn()}>
+          <Pressable onPress={jest.fn()}>
+            <Text>Trigger</Text>
+          </Pressable>
+        </Pressable>
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(getWarnings()).toEqual([
+      'Cannot fire the "press" event on elements blocked by pointerEvents.',
+    ]);
   });
 
   test('warns when pointerEvents moves the touch past the Pressable to an element without handlers', async () => {
