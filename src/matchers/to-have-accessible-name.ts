@@ -4,10 +4,11 @@ import type { TestInstance } from 'test-renderer';
 import { computeAccessibleName } from '../helpers/accessibility';
 import type { TextMatch, TextMatchOptions } from '../matches';
 import { matches } from '../matches';
+import type { MatcherContext } from './utils';
 import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveAccessibleName(
-  this: jest.MatcherContext,
+  this: MatcherContext,
   instance: TestInstance,
   expectedName?: TextMatch,
   options?: TextMatchOptions,

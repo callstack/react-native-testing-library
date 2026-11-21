@@ -5,9 +5,10 @@ import type { TestInstance } from 'test-renderer';
 import { computeAriaChecked, getRole, isAccessibilityElement } from '../helpers/accessibility';
 import { ErrorWithStack } from '../helpers/errors';
 import { formatElement } from '../helpers/format-element';
+import type { MatcherContext } from './utils';
 import { checkHostElement } from './utils';
 
-export function toBePartiallyChecked(this: jest.MatcherContext, instance: TestInstance) {
+export function toBePartiallyChecked(this: MatcherContext, instance: TestInstance) {
   checkHostElement(instance, toBePartiallyChecked, this);
 
   if (!hasValidAccessibilityRole(instance)) {

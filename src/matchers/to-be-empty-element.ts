@@ -4,9 +4,10 @@ import type { TestInstance } from 'test-renderer';
 
 import { isTestInstance } from '../helpers/component-tree';
 import { formatElementList } from '../helpers/format-element';
+import type { MatcherContext } from './utils';
 import { checkHostElement } from './utils';
 
-export function toBeEmptyElement(this: jest.MatcherContext, instance: TestInstance) {
+export function toBeEmptyElement(this: MatcherContext, instance: TestInstance) {
   checkHostElement(instance, toBeEmptyElement, this);
 
   // TODO check

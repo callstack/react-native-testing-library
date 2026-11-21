@@ -4,9 +4,10 @@ import type { TestInstance } from 'test-renderer';
 
 import { computeAriaDisabled } from '../helpers/accessibility';
 import { formatElement } from '../helpers/format-element';
+import type { MatcherContext } from './utils';
 import { checkHostElement } from './utils';
 
-export function toBeDisabled(this: jest.MatcherContext, instance: TestInstance) {
+export function toBeDisabled(this: MatcherContext, instance: TestInstance) {
   checkHostElement(instance, toBeDisabled, this);
 
   const isDisabled = computeAriaDisabled(instance);
@@ -25,7 +26,7 @@ export function toBeDisabled(this: jest.MatcherContext, instance: TestInstance) 
   };
 }
 
-export function toBeEnabled(this: jest.MatcherContext, instance: TestInstance) {
+export function toBeEnabled(this: MatcherContext, instance: TestInstance) {
   checkHostElement(instance, toBeEnabled, this);
 
   const isEnabled = !computeAriaDisabled(instance);

@@ -4,9 +4,10 @@ import type { TestInstance } from 'test-renderer';
 
 import { computeAriaBusy } from '../helpers/accessibility';
 import { formatElement } from '../helpers/format-element';
+import type { MatcherContext } from './utils';
 import { checkHostElement } from './utils';
 
-export function toBeBusy(this: jest.MatcherContext, instance: TestInstance) {
+export function toBeBusy(this: MatcherContext, instance: TestInstance) {
   checkHostElement(instance, toBeBusy, this);
 
   return {

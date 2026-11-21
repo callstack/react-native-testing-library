@@ -26,6 +26,9 @@ with v14.
   a child with `onStartShouldSetResponder` returning `false` stopped these events from reaching
   the `onTouchStart` of its ancestors. Responder-driven events like `press` still respect the
   responder.
+- Matcher type declarations no longer depend on the global `jest` namespace, fixing `TS2694` in
+  TypeScript projects without `@types/jest` (e.g. when using `@jest/globals` or Vitest with
+  `skipLibCheck: false`).
 
 ## 14.1.0
 

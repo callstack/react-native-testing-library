@@ -11,9 +11,10 @@ import {
 import { ErrorWithStack } from '../helpers/errors';
 import { formatElement } from '../helpers/format-element';
 import { isHostSwitch } from '../helpers/host-component-names';
+import type { MatcherContext } from './utils';
 import { checkHostElement } from './utils';
 
-export function toBeChecked(this: jest.MatcherContext, instance: TestInstance) {
+export function toBeChecked(this: MatcherContext, instance: TestInstance) {
   checkHostElement(instance, toBeChecked, this);
 
   if (!isHostSwitch(instance) && !isSupportedAccessibilityElement(instance)) {

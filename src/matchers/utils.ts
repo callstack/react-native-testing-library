@@ -11,8 +11,21 @@ import type { TestInstance } from 'test-renderer';
 
 import { isTestInstance } from '../helpers/component-tree';
 
+export interface MatcherContext {
+  readonly isNot?: boolean;
+  readonly equals: (a: unknown, b: unknown) => boolean;
+}
+
+export type CustomMatcher = (
+  this: MatcherContext,
+  ...args: never[]
+) => {
+  pass: boolean;
+  message: () => string;
+};
+
 class HostElementTypeError extends Error {
-  constructor(received: unknown, matcherFn: jest.CustomMatcher, context: jest.MatcherContext) {
+  constructor(received: unknown, matcherFn: CustomMatcher, context: MatcherContext) {
     super();
 
     /* istanbul ignore next */
@@ -46,8 +59,8 @@ class HostElementTypeError extends Error {
  */
 export function checkHostElement(
   instance: TestInstance | null | undefined,
-  matcherFn: jest.CustomMatcher,
-  context: jest.MatcherContext,
+  matcherFn: CustomMatcher,
+  context: MatcherContext,
 ): asserts instance is TestInstance {
   if (!isTestInstance(instance)) {
     throw new HostElementTypeError(instance, matcherFn, context);

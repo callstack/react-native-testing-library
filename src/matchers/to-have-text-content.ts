@@ -4,10 +4,11 @@ import type { TestInstance } from 'test-renderer';
 import { getTextContent } from '../helpers/text-content';
 import type { TextMatch, TextMatchOptions } from '../matches';
 import { matches } from '../matches';
+import type { MatcherContext } from './utils';
 import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveTextContent(
-  this: jest.MatcherContext,
+  this: MatcherContext,
   instance: TestInstance,
   expectedText: TextMatch,
   options?: TextMatchOptions,

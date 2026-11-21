@@ -5,9 +5,10 @@ import type { TestInstance } from 'test-renderer';
 import { getContainerInstance } from '../helpers/component-tree';
 import { formatElement } from '../helpers/format-element';
 import { screen } from '../screen';
+import type { MatcherContext } from './utils';
 import { checkHostElement } from './utils';
 
-export function toBeOnTheScreen(this: jest.MatcherContext, instance: TestInstance) {
+export function toBeOnTheScreen(this: MatcherContext, instance: TestInstance) {
   if (instance !== null || !this.isNot) {
     checkHostElement(instance, toBeOnTheScreen, this);
   }
