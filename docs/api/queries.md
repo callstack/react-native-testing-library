@@ -169,7 +169,7 @@ Returns a `TestInstance` with matching `role` or `accessibilityRole` prop.
 > [!INFO]
 > In order for `*ByRole` queries to match an element it needs to be considered an accessibility element:
 >
-> 1. `Text`, `TextInput` and `Switch` elements are these by default.
+> 1. `Text`, `TextInput` and `Switch` elements are these by default. On Android, `Text` stays one even with `accessible={false}`, which React Native's `Text` sets there when it has no press handler. There `accessible` only controls focus, and TalkBack still reads the text.
 > 2. `View` elements need an explicit [`accessible`](https://reactnative.dev/docs/accessibility#accessible) prop set to `true`
 > 3. Some React Native composite components like `Pressable` & `TouchableOpacity` render host `View` element with `accessible` prop already set.
 
