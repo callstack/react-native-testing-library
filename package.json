@@ -74,7 +74,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.29.7",
-    "@babel/core": "^7.29.7",
+    "@babel/core": "^8.0.1",
     "@babel/plugin-transform-strict-mode": "^7.29.7",
     "@babel/preset-env": "^7.29.7",
     "@babel/preset-react": "^7.29.7",
