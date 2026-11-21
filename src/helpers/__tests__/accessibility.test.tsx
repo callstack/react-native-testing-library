@@ -1,5 +1,14 @@
 import React from 'react';
-import { Image, Pressable, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  Platform,
+  Pressable,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import { isHiddenFromAccessibility, isInaccessible, render, screen } from '../..';
 import {
@@ -315,6 +324,10 @@ describe('isHiddenFromAccessibility', () => {
 });
 
 describe('isAccessibilityElement', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   test('matches View component properly', async () => {
     await render(
       <View>
@@ -356,6 +369,24 @@ describe('isAccessibilityElement', () => {
     expect(isAccessibilityElement(screen.getByTestId('default'))).toBeTruthy();
     expect(isAccessibilityElement(screen.getByTestId('true'))).toBeTruthy();
     expect(isAccessibilityElement(screen.getByTestId('false'))).toBeFalsy();
+  });
+
+  test('matches Text component regardless of accessible prop on Android', async () => {
+    jest.replaceProperty(Platform, 'OS', 'android');
+    await render(
+      <View>
+        <Text testID="default">Default</Text>
+        <Text testID="true" accessible>
+          True
+        </Text>
+        <Text testID="false" accessible={false}>
+          False
+        </Text>
+      </View>,
+    );
+    expect(isAccessibilityElement(screen.getByTestId('default'))).toBeTruthy();
+    expect(isAccessibilityElement(screen.getByTestId('true'))).toBeTruthy();
+    expect(isAccessibilityElement(screen.getByTestId('false'))).toBeTruthy();
   });
 
   test('matches Switch component properly', async () => {

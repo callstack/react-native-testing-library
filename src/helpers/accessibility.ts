@@ -1,5 +1,5 @@
 import type { AccessibilityRole, AccessibilityState, AccessibilityValue, Role } from 'react-native';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import type { TestInstance } from 'test-renderer';
 
 import { getContainerInstance, getInstanceSiblings, isTestInstance } from './component-tree';
@@ -91,6 +91,14 @@ export function isAccessibilityElement(instance: TestInstance | null): boolean {
 
   // https://github.com/facebook/react-native/blob/8dabed60f456e76a9e53273b601446f34de41fb5/packages/react-native/Libraries/Image/Image.ios.js#L172
   if (isHostImage(instance) && instance.props.alt !== undefined) {
+    return true;
+  }
+
+  // On Android, `accessible` maps to native `focusable`, which does not stop TalkBack from reading
+  // a `Text`. React Native's `Text` sets `accessible={false}` on Android when it has no press handler.
+  // See: https://reactnative.dev/docs/accessibility#accessible
+  // See: https://github.com/facebook/react-native/blob/v0.79.7/packages/react-native/Libraries/Text/Text.js#L236-L243
+  if (Platform.OS === 'android' && isHostText(instance)) {
     return true;
   }
 

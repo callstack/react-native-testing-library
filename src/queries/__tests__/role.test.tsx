@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   Button as RNButton,
   Image,
+  Platform,
   Pressable,
   Switch,
   Text,
@@ -978,6 +979,48 @@ describe('matches only accessible elements', () => {
       </View>,
     );
     expect(screen.queryByRole('menu', { name: 'Action' })).toBeFalsy();
+  });
+});
+
+describe('matches Text by its platform accessibility', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  // React Native's Text passes `accessible={false}` to its host on Android when it has no press handler.
+  test('matches Text with accessible={false} on Android', async () => {
+    jest.replaceProperty(Platform, 'OS', 'android');
+    await render(
+      <Text accessibilityRole="header" accessible={false}>
+        Title
+      </Text>,
+    );
+    expect(screen.getByRole('header', { name: 'Title' })).toBeOnTheScreen();
+    expect(screen.getByRole('header')).toBeOnTheScreen();
+  });
+
+  test('ignores hidden Text with accessible={false} on Android', async () => {
+    jest.replaceProperty(Platform, 'OS', 'android');
+    await render(
+      <Text
+        accessibilityRole="header"
+        accessible={false}
+        importantForAccessibility="no-hide-descendants"
+      >
+        Title
+      </Text>,
+    );
+    expect(screen.queryByRole('header', { name: 'Title' })).toBeNull();
+  });
+
+  test('ignores Text with accessible={false} on iOS', async () => {
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    await render(
+      <Text accessibilityRole="header" accessible={false}>
+        Title
+      </Text>,
+    );
+    expect(screen.queryByRole('header', { name: 'Title' })).toBeNull();
   });
 });
 
