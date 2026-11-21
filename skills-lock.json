@@ -1,0 +1,53 @@
+{
+  "version": 2,
+  "skills": {
+    "diagnose-issue": {
+      "source": "mdjastrzebski/skills",
+      "ref": "bd24794178a1cf16a14778fb69746cd6a4ef1113",
+      "commit": "bd24794178a1cf16a14778fb69746cd6a4ef1113",
+      "sourceType": "github",
+      "skillPath": "skills/diagnose-issue/SKILL.md",
+      "computedHash": "08da32053fd533fd8245946d85bc43441e4bec05fdfe413ac736d350d42593e0"
+    },
+    "factory": {
+      "source": "mdjastrzebski/skills",
+      "ref": "bd24794178a1cf16a14778fb69746cd6a4ef1113",
+      "commit": "bd24794178a1cf16a14778fb69746cd6a4ef1113",
+      "sourceType": "github",
+      "skillPath": "skills/factory/SKILL.md",
+      "computedHash": "b37b6bcdc9579dce832781f1dcfe6c6bd8d92f0cdf2cb90d39d2e2a36f427d60"
+    },
+    "fix-issue": {
+      "source": "mdjastrzebski/skills",
+      "ref": "bd24794178a1cf16a14778fb69746cd6a4ef1113",
+      "commit": "bd24794178a1cf16a14778fb69746cd6a4ef1113",
+      "sourceType": "github",
+      "skillPath": "skills/fix-issue/SKILL.md",
+      "computedHash": "4990181ab038285a9f86de921959b0324414995f46ea6065139390848f70e017"
+    },
+    "fix-issues": {
+      "source": "mdjastrzebski/skills",
+      "ref": "bd24794178a1cf16a14778fb69746cd6a4ef1113",
+      "commit": "bd24794178a1cf16a14778fb69746cd6a4ef1113",
+      "sourceType": "github",
+      "skillPath": "skills/fix-issues/SKILL.md",
+      "computedHash": "5d9066fd549f5b1630a7594af4508f3f3015b5ae40fce4bb6b17fb2be26fddce"
+    },
+    "implement-idea": {
+      "source": "mdjastrzebski/skills",
+      "ref": "bd24794178a1cf16a14778fb69746cd6a4ef1113",
+      "commit": "bd24794178a1cf16a14778fb69746cd6a4ef1113",
+      "sourceType": "github",
+      "skillPath": "skills/implement-idea/SKILL.md",
+      "computedHash": "b3a1176d691c61a7ef895e9810fe726b5ed7da72d84a48d0d45a0cb3d8d13623"
+    },
+    "summarize-changes": {
+      "source": "mdjastrzebski/skills",
+      "ref": "bd24794178a1cf16a14778fb69746cd6a4ef1113",
+      "commit": "bd24794178a1cf16a14778fb69746cd6a4ef1113",
+      "sourceType": "github",
+      "skillPath": "skills/summarize-changes/SKILL.md",
+      "computedHash": "e0d669ed4bfc8c935a272d7d846224fe5dcb68719c8780da6a946b5d78cb8b5e"
+    }
+  }
+}

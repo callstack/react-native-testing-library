@@ -45,6 +45,12 @@ Notes:
 - If `refs/` is empty, ask the human to run `git submodule update --init --depth 1`.
 - Tooling ignores `refs/` (Jest, ESLint, oxfmt, `tsc`). Keep it that way when changing configs.
 
+## Agent skills
+
+Third-party skills are committed in `.claude/skills/`, with their source revisions pinned in `skills-lock.json`. Don't edit them by hand. To change a version, re-run `npx skills add` at the new commit so the files and the lockfile stay in sync. Start a fresh agent session after changes so the harness discovers them.
+
+The pinned [Factory](https://github.com/mdjastrzebski/skills) skills (`factory`, `diagnose-issue`, `implement-idea`, `summarize-changes`, `fix-issues`, `fix-issue`) take an idea or issue through an approved spec, a draft PR, and review rounds. Invoke with `/factory <feature idea>` (Claude Code) or `$factory <feature idea>` (Codex).
+
 ## Agent rules
 
 ### Git restrictions
