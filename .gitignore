@@ -25,6 +25,7 @@ dist
 
 codemods/**/dist/
 
-# AI assistant skills (3rd party)
-# .claude/skills/ is tracked; see "Agent skills" in AGENTS.md
+# AI assistant skills (3rd party, fetched on demand)
+.agents/skills/
+.claude/skills/
 .cursor/skills/
