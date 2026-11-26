@@ -14,7 +14,7 @@ If User Event supports a given interaction, prefer it over the Fire Event counte
 userEvent.setup(options?: {
   delay?: number;
   advanceTimers?: (delay: number) => Promise<void> | void;
-})
+}): UserEventInstance
 ```
 
 Example
@@ -23,7 +23,7 @@ Example
 const user = userEvent.setup();
 ```
 
-Creates a User Event object instance, which can be used to trigger events.
+Creates a User Event object instance, which can be used to trigger events. Its type, `UserEventInstance`, is exported from the package, so a helper that returns or receives the instance can name it.
 
 ### Options {#setup-options}
 

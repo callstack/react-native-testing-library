@@ -59,7 +59,7 @@ const defaultOptions: Required<UserEventSetupOptions> = {
  * @param options
  * @returns UserEvent instance
  */
-export function setup(options?: UserEventSetupOptions) {
+export function setup(options?: UserEventSetupOptions): UserEventInstance {
   const config = createConfig(options, setup);
   const instance = createInstance(config);
   return instance;

@@ -6,7 +6,7 @@ import type { ScrollToOptions } from './scroll';
 import { setup } from './setup';
 import type { TypeOptions } from './type';
 
-export { UserEventConfig } from './setup';
+export type { UserEventConfig, UserEventInstance } from './setup';
 
 export const userEvent = {
   setup,
