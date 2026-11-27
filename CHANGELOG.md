@@ -29,6 +29,10 @@ with v14.
 - Matcher type declarations no longer depend on the global `jest` namespace, fixing `TS2694` in
   TypeScript projects without `@types/jest` (e.g. when using `@jest/globals` or Vitest with
   `skipLibCheck: false`).
+- Matcher types no longer disappear from the `@jest/globals` `expect` when another declaration
+  also augments the `expect` module (e.g. `expo-router/testing-library`), which made every
+  matcher call fail with `TS2339`. The types now augment `expect`, where Jest declares
+  `Matchers`, instead of `@jest/expect`, which only re-exports it.
 
 ## 14.1.0
 
