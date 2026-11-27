@@ -287,9 +287,10 @@ declare global {
   }
 }
 
-// Explicit `@jest/globals` `expect` matchers.
-// @ts-expect-error: Invalid module name in augmentation, module '@jest/expect' cannot be found
-declare module '@jest/expect' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface Matchers<R extends void | Promise<void>> extends JestNativeMatchers<R> {}
+// Explicit `@jest/globals` `expect` matchers. Augment `expect`, which declares `Matchers`, not
+// `@jest/expect`, which only re-exports it: an augmentation through the re-export is dropped when
+// another declaration also augments `expect`.
+declare module 'expect' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars
+  interface Matchers<R extends void | Promise<void>, T = unknown> extends JestNativeMatchers<R> {}
 }
